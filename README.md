@@ -16,7 +16,7 @@ Asegúrate de tener instalado:
 Si tienes el código en un repositorio Git:
 
 git clone [URL-del-repositorio]
-cd los-dulces-de-lu
+cd losdulcesdelu
 
 Si tienes los archivos en un archivo ZIP, descomprímelos en una carpeta y navega hasta ella en la terminal.
 
