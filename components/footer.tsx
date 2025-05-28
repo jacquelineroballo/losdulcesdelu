@@ -144,13 +144,13 @@ export function Footer() {
           transition={{ duration: 0.5, delay: 0.4 }}
           viewport={{ once: true }}
         >
-          <div className="flex items-center justify-center gap-2">
+          <p className="flex items-center justify-center gap-2">
             © 2024 Los dulces de Lu. Hecho con
             <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY }}>
               <Heart className="h-4 w-4 text-primary fill-primary" />
             </motion.div>
             en Argentina
-          </div>
+          </p>
         </motion.div>
       </div>
     </footer>
