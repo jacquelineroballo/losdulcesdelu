@@ -24,29 +24,29 @@ Si tienes los archivos en un archivo ZIP, descomprímelos en una carpeta y naveg
 
 Con npm:
 
-```shellscript
+\`\`\`shellscript
 npm install
-```
+\`\`\`
 
 O con yarn:
 
-```shellscript
+\`\`\`shellscript
 yarn install
-```
+\`\`\`
 
 ### 3. Ejecuta el servidor de desarrollo
 
 Con npm:
 
-```shellscript
+\`\`\`shellscript
 npm run dev
-```
+\`\`\`
 
 O con yarn:
 
-```shellscript
+\`\`\`shellscript
 yarn dev
-```
+\`\`\`
 
 Esto iniciará el servidor de desarrollo de Next.js. Abre [http://localhost:3000](http://localhost:3000) en tu navegador para ver el sitio web.
 
@@ -87,11 +87,11 @@ El proyecto sigue la estructura estándar de Next.js App Router:
 
 Si ves errores relacionados con módulos que no se encuentran, intenta:
 
-```shellscript
+\`\`\`shellscript
 npm install
 # o
 yarn install
-```
+\`\`\`
 
 ### Problemas con las imágenes de placeholder
 
@@ -105,11 +105,10 @@ El proyecto utiliza fuentes de Google (Inter, Pacifico, Poppins). Asegúrate de 
 
 Si el puerto 3000 ya está en uso, puedes especificar un puerto diferente:
 
-```shellscript
+\`\`\`shellscript
 npm run dev -- -p 3001
 # o
 yarn dev -p 3001
-```
+\`\`\`
 
 ¡Listo! Con estos pasos deberías poder ejecutar "Los dulces de Lu" en tu computadora local sin problemas. Si tienes alguna duda o encuentras algún problema específico, no dudes en preguntar.![image](https://github.com/user-attachments/assets/ea29a4c3-e55d-4678-8595-5a8b43ef464b)
-
