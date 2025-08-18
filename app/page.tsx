@@ -74,10 +74,10 @@ export default function Home() {
 				<div className='absolute inset-0 pointer-events-none'>{renderSprinkles()}</div>
 
 				<motion.div className='container px-4 md:px-6 relative z-10' style={{ opacity, scale, y }}>
-					<div className='grid gap-6 lg:grid-cols-2 lg:gap-12 items-center'>
-						<div className='space-y-4'>
+					<div className='grid gap-4 lg:grid-cols-2 lg:gap-8 items-center'>
+						<div className='space-y-3'>
 							<motion.div
-								className='inline-block rounded-lg bg-primary/10 px-3 py-1 text-sm'
+								className='inline-block rounded-lg bg-primary/10 px-2 py-1 text-xs'
 								initial={{ opacity: 0, x: -20 }}
 								animate={{ opacity: 1, x: 0 }}
 								transition={{ duration: 0.5 }}
@@ -86,25 +86,25 @@ export default function Home() {
 							</motion.div>
 
 							<motion.h1
-								className='text-4xl font-bold tracking-tighter sm:text-6xl md:text-7xl/none'
+								className='text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none'
 								initial={{ opacity: 0, y: 20 }}
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ duration: 0.5, delay: 0.2 }}
 							>
 								Delicias{' '}
-								<span className='font-display gradient-text sparkle p-2'>Personalizadas</span> para
+								<span className='font-display gradient-text sparkle p-1'>Personalizadas</span> para
 								cada ocasión
 							</motion.h1>
 
 							<motion.p
-								className='max-w-[600px] text-muted-foreground md:text-xl'
+								className='max-w-[500px] text-muted-foreground text-sm md:text-base lg:text-lg'
 								initial={{ opacity: 0, y: 20 }}
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ duration: 0.5, delay: 0.4 }}
 							>
 								Transformamos ingredientes simples en obras de arte comestibles. Siempre con ese
 								sabor único que te hace sentir en casa.{' '}
-								<Heart className='inline animate-pulse text-red-400' />
+								<Heart className='inline animate-pulse text-red-400 w-4 h-4' />
 							</motion.p>
 
 							<motion.div
@@ -113,10 +113,10 @@ export default function Home() {
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ duration: 0.5, delay: 0.6 }}
 							>
-								<Button asChild size='lg' className='font-medium btn-fancy'>
+								<Button asChild size='default' className='font-medium btn-fancy text-sm'>
 									<Link href='/gallery'>Ver Galería</Link>
 								</Button>
-								<Button variant='outline' size='lg' className='font-medium border-animated'>
+								<Button variant='outline' size='default' className='font-medium border-animated text-sm'>
 									<Link href='/contact'>Contactar</Link>
 								</Button>
 							</motion.div>
@@ -129,7 +129,7 @@ export default function Home() {
 							transition={{ duration: 0.8, delay: 0.3, type: 'spring' }}
 						>
 							<Card3D className='w-full'>
-								<div className='relative w-full h-[400px] rounded-xl overflow-hidden'>
+								<div className='relative w-full h-[300px] md:h-[350px] lg:h-[400px] rounded-xl overflow-hidden'>
 									<Image
 										src='/placeholder.svg?height=600&width=800'
 										alt='Torta de cumpleaños personalizada'
@@ -140,7 +140,7 @@ export default function Home() {
 									<div className='absolute inset-0 bg-gradient-to-t from-black/30 to-transparent'></div>
 								</div>
 								<motion.div
-									className='absolute -bottom-6 -left-6 glass rounded-lg shadow-lg p-4 max-w-[200px]'
+									className='absolute -bottom-4 -left-4 glass rounded-lg shadow-lg p-3 max-w-[180px]'
 									initial={{ opacity: 0, x: -20, y: 20 }}
 									animate={{ opacity: 1, x: 0, y: 0 }}
 									transition={{ duration: 0.5, delay: 0.8 }}
