@@ -25,7 +25,7 @@ interface Particle {
 }
 
 interface AnimatedBackgroundProps {
-  variant?: "default" | "bubbles" | "waves" | "confetti"
+  variant?: "default" | "bubbles" | "waves" | "confetti" | "brand"
 }
 
 export function AnimatedBackground({ variant = "default" }: AnimatedBackgroundProps) {
@@ -33,7 +33,6 @@ export function AnimatedBackground({ variant = "default" }: AnimatedBackgroundPr
 
   useEffect(() => {
     if (!canvasRef.current) return
-
     const canvas = canvasRef.current
     const ctx = canvas.getContext("2d")
     if (!ctx) return
@@ -191,25 +190,36 @@ export function AnimatedBackground({ variant = "default" }: AnimatedBackgroundPr
       }
 
       animate()
+    } else if (variant === "brand") {
+      let time = 0
+      const animate = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        time += 0.003
+        const x = canvas.width * (1 + 0.07 * Math.sin(time))
+        const y = canvas.height * (1 + 0.07 * Math.cos(time))
+        const gradient = ctx.createLinearGradient(0, 0, x, y)
+        // Aumentamos opacidades para que se note más el degradado
+        gradient.addColorStop(0, "rgba(236, 133, 153, 0.32)")  // #EC8599
+        gradient.addColorStop(0.5, "rgba(247, 208, 216, 0.28)") // #F7D0D8
+        gradient.addColorStop(1, "rgba(26, 203, 149, 0.26)")    // #1ACB95
+        ctx.fillStyle = gradient
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
+        animationFrameId = requestAnimationFrame(animate)
+      }
+      animate()
     } else {
-      // Variante por defecto: gradiente animado
+      // Variante por defecto: gradiente animado HSL
       let hue = 0
-
       const animate = () => {
         hue = (hue + 0.5) % 360
-
-        // Crear gradiente
         const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height)
         gradient.addColorStop(0, `hsl(${hue}, 100%, 90%)`)
         gradient.addColorStop(0.5, `hsl(${(hue + 60) % 360}, 100%, 80%)`)
         gradient.addColorStop(1, `hsl(${(hue + 120) % 360}, 100%, 90%)`)
-
         ctx.fillStyle = gradient
         ctx.fillRect(0, 0, canvas.width, canvas.height)
-
         animationFrameId = requestAnimationFrame(animate)
       }
-
       animate()
     }
 
