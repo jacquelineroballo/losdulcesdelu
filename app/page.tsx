@@ -116,7 +116,11 @@ export default function Home() {
 								<Button asChild size='default' className='font-medium btn-fancy text-sm'>
 									<Link href='/gallery'>Ver Galería</Link>
 								</Button>
-								<Button variant='outline' size='default' className='font-medium border-animated text-sm'>
+								<Button
+									variant='outline'
+									size='default'
+									className='font-medium border-animated text-sm'
+								>
 									<Link href='/contact'>Contactar</Link>
 								</Button>
 							</motion.div>
@@ -131,8 +135,8 @@ export default function Home() {
 							<Card3D className='w-full'>
 								<div className='relative w-full h-[300px] md:h-[350px] lg:h-[400px] rounded-xl overflow-hidden'>
 									<Image
-										src='/placeholder.svg?height=600&width=800'
-										alt='Torta de cumpleaños personalizada'
+										src='/gallery/hero.png'
+										alt='Tortas de cumpleaños personalizadas'
 										fill
 										className='object-cover'
 										priority
