@@ -21,6 +21,12 @@ export default function AboutPage() {
 	const scale = useTransform(scrollYProgress, [0, 1], [0.8, 1])
 	const opacity = useTransform(scrollYProgress, [0, 0.3], [0, 1])
 
+	const aboutImages: { src: string; alt: string }[] = [
+		{ src: '/gallery/torta-casino.png', alt: 'Torta temática Casino' },
+		{ src: '/gallery/torta-equina.png', alt: 'Torta temática Equina' },
+		{ src: '/gallery/postre-pascuas.png', alt: 'Postre de Pascuas' },
+		{ src: '/gallery/candybar-bautismo.png', alt: 'Candy bar de bautismo' },
+	]
 	return (
 		<>
 			{/* Hero Section */}
@@ -157,17 +163,19 @@ export default function AboutPage() {
 						</div>
 
 						<motion.div style={{ scale, opacity }} className='grid grid-cols-2 gap-4'>
-							{[1, 2, 3, 4].map((i) => (
+							{aboutImages.map(({ src, alt }, i) => (
 								<Card3D key={i} className='overflow-hidden'>
 									<CardContent className='p-0'>
 										<div className='relative aspect-square'>
 											<Image
-												src={`/placeholder.svg?height=400&width=400&text=Imagen ${i}`}
-												alt={`Imagen ${i}`}
+												src={src}
+												alt={alt}
 												fill
-												className='object-cover'
+												className='object-contain'
+												sizes='(min-width: 768px) 50vw, 100vw'
+												priority={i === 0}
 											/>
-											<div className='absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300'></div>
+											<div className='absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300' />
 										</div>
 									</CardContent>
 								</Card3D>
@@ -249,8 +257,7 @@ export default function AboutPage() {
 														strokeLinejoin='round'
 													>
 														<rect width='20' height='20' x='2' y='2' rx='5' ry='5' />
-														<path d='M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z' />
-														<line x1='17.5' x2='17.51' y1='6.5' y2='6.5' />
+														<path d='M17.5 17.51' y1='6.5' y2='6.5' />
 													</svg>
 												</motion.a>
 												<motion.a
