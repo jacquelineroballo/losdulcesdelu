@@ -170,26 +170,6 @@ export default function Home() {
 						</motion.div>
 					</div>
 				</motion.div>
-
-				<motion.div
-					className='absolute bottom-10 left-1/2 transform -translate-x-1/2'
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.5, delay: 1.2 }}
-				>
-					<motion.div
-						className='w-8 h-12 border-2 border-primary rounded-full flex justify-center'
-						animate={{ y: [0, 10, 0] }}
-						transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
-					>
-						<motion.div
-							className='w-1 h-3 bg-primary rounded-full mt-2'
-							initial={{ opacity: 0 }}
-							animate={{ opacity: [0, 1, 0], y: [0, 10, 0] }}
-							transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
-						/>
-					</motion.div>
-				</motion.div>
 			</section>
 
 			{/* Por qué elegirnos */}
