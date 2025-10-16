@@ -49,7 +49,6 @@ export function Card3D({ children, className = "", intensity = 15 }: Card3DProps
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{
-        transformStyle: "preserve-3d",
         transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
         transition: "transform 0.1s ease",
       }}

@@ -86,7 +86,7 @@ export default function Home() {
 							</motion.div>
 
 							<motion.h1
-								className='text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none'
+								className='text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-5xl/none'
 								initial={{ opacity: 0, y: 20 }}
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ duration: 0.5, delay: 0.2 }}
@@ -406,7 +406,7 @@ export default function Home() {
 						<FadeIn direction='left'>
 							<div className='space-y-4'>
 								<h2 className='text-4xl font-bold tracking-tighter md:text-5xl/tight gradient-text'>
-									¿Listo para probar la magia?
+									¿Listos para probar la magia?
 								</h2>
 								<p className='text-xl text-muted-foreground'>
 									Da el primer paso hacia la satisfacción dulce: realiza tu pedido o suscríbete a
