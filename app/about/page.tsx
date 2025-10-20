@@ -35,7 +35,6 @@ export default function AboutPage() {
 
 				<div className='container px-4 md:px-6 relative z-10'>
 					<div className='grid gap-10 lg:grid-cols-2 items-center'>
-						{/* Título ajustado */}
 						<motion.div
 							initial={{ opacity: 0, x: -50 }}
 							animate={{ opacity: 1, x: 0 }}
@@ -89,9 +88,9 @@ export default function AboutPage() {
 									transition={{ duration: 0.5, delay: 0.8 }}
 								>
 									<p className='text-sm'>
-										"Cada pastel cuenta una historia y crea un recuerdo inolvidable"
+										"Cada torta cuenta una historia y crea un recuerdo inolvidable"
 									</p>
-									<p className='text-xs mt-2 font-medium'>— Lucía, Fundadora</p>
+									<p className='text-xs mt-2 font-medium'>— Luciana, Fundadora</p>
 								</motion.div>
 							</Card3D>
 
@@ -164,7 +163,7 @@ export default function AboutPage() {
 
 						<motion.div style={{ scale, opacity }} className='grid grid-cols-2 gap-4'>
 							{aboutImages.map(({ src, alt }, i) => (
-								<Card3D key={i} className='overflow-hidden'>
+								<Card3D key={i} className='overflow-hidden rounded-lg'>
 									<CardContent className='p-0'>
 										<div className='relative aspect-square'>
 											<Image

@@ -63,7 +63,7 @@ export function Card3D({ children, className = '', intensity = 15 }: Card3DProps
             ${mouseX / 15}px ${mouseY / 15}px 24px rgba(225, 29, 72, 0.1),
             inset -5px -5px 10px rgba(255, 255, 255, 0.05),
             inset 5px 5px 10px rgba(0, 0, 0, 0.05)
-          `,
+            `,
 				}}
 			/>
 		</motion.div>
