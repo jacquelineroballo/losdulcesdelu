@@ -209,7 +209,7 @@ export default function Home() {
 							},
 						].map((feature, index) => (
 							<StaggerItem key={index} direction='up'>
-								<Card3D className='h-full border-2 hover:border-primary transition-colors duration-300 frosting-drip'>
+								<Card3D className='h-full border-brand-accent1 border-2 rounded-lg hover:border-primary transition-colors duration-300 frosting-drip'>
 									<CardContent className='p-8 flex flex-col items-center text-center space-y-4'>
 										<motion.div
 											className='rounded-full bg-primary/10 p-6'
