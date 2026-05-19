@@ -1,12 +1,9 @@
 import type React from "react"
-import { Inter, Pacifico, Poppins } from "next/font/google"
+import { Pacifico, Poppins } from "next/font/google"
 import "./globals.css"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { ThemeProvider } from "@/components/theme-provider"
-
-// Configure the Inter font
-const inter = Inter({ subsets: ["latin"] })
 
 // Configure the Poppins font
 const poppins = Poppins({
@@ -36,8 +33,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" className={`${poppins.variable} ${pacifico.variable}`}>
-      <body className={`${inter.className} min-h-screen flex flex-col`}>
+    <html lang="es" className={`${poppins.variable} ${pacifico.variable} bg-background`}>
+      <body className="min-h-screen flex flex-col font-sans antialiased">
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <Navbar />
           <main className="flex-grow">{children}</main>
