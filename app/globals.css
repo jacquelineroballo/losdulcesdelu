@@ -147,57 +147,6 @@ button,
 	border-color: #fff3f5;
 }
 
-@layer base {
-	* {
-		@apply border-border;
-	}
-	body {
-		@apply bg-background text-foreground;
-		font-family: var(--font-poppins), sans-serif;
-	}
-	h1,
-	h2,
-	h3,
-	h4,
-	h5,
-	h6 {
-		font-family: var(--font-poppins), sans-serif;
-		font-weight: 700;
-	}
-	.font-display {
-		font-family: var(--font-pacifico), cursive;
-	}
-}
-
-/* Cursor personalizado */
-html,
-a,
-button,
-[role='button'] {
-	cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='none' stroke='%23000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z'/%3E%3C/svg%3E")
-			16 16,
-		pointer;
-}
-
-/* Fondos animados */
-.bg-animated {
-	background: linear-gradient(-45deg, #ec8599, #1acb95, #f7d0d8, #f7d0d8);
-	background-size: 400% 400%;
-	animation: gradient 15s ease infinite;
-}
-
-@keyframes gradient {
-	0% {
-		background-position: 0% 50%;
-	}
-	50% {
-		background-position: 100% 50%;
-	}
-	100% {
-		background-position: 0% 50%;
-	}
-}
-
 /* Efecto de confeti */
 .confetti-container {
 	position: absolute;

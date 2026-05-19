@@ -43,7 +43,7 @@ const TimerIcon = ({ className }: { className?: string }) => (
 		</defs>
 		<g id='g4197' transform='matrix(1.3333333,0,0,-1.3333333,0,682.66667)'>
 			<g id='g4199'>
-				<g id='g4201' clip-path='url(#clipPath4205)'>
+				<g id='g4201' clipPath='url(#clipPath4205)'>
 					<g id='g4207' transform='translate(151.7905,127.7417)'>
 						<path
 							d='m 0,0 c 0,-26.563 -21.534,-48.097 -48.097,-48.097 -26.563,0 -48.097,21.534 -48.097,48.097 0,26.563 21.534,48.097 48.097,48.097 C -21.534,48.097 0,26.563 0,0 Z'
@@ -435,7 +435,7 @@ const MixerIcon = ({ className }: { className?: string }) => (
 		</defs>
 		<g id='g3093' transform='matrix(1.3333333,0,0,-1.3333333,0,682.66667)'>
 			<g id='g3095'>
-				<g id='g3097' clip-path='url(#clipPath3101)'>
+				<g id='g3097' clipPath='url(#clipPath3101)'>
 					<g id='g3103' transform='translate(406,256)'>
 						<path
 							d='m 0,0 c 0,-82.843 -67.157,-150 -150,-150 -82.843,0 -150,67.157 -150,150 0,82.843 67.157,150 150,150 C -67.157,150 0,82.843 0,0 Z'
