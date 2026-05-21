@@ -3,7 +3,6 @@ import { Inter, Pacifico, Poppins } from "next/font/google"
 import "./globals.css"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
-import { ThemeProvider } from "@/components/theme-provider"
 
 // Configure the Inter font
 const inter = Inter({ subsets: ["latin"] })
@@ -27,7 +26,7 @@ const pacifico = Pacifico({
 export const metadata = {
   title: "Los dulces de Lu - Pastelería Personalizada",
   description: "Pastelería artesanal con diseños personalizados para cada ocasión",
-    generator: 'v0.dev'
+  generator: "v0.dev",
 }
 
 export default function RootLayout({
@@ -38,11 +37,9 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${poppins.variable} ${pacifico.variable}`}>
       <body className={`${inter.className} min-h-screen flex flex-col`}>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-          <Navbar />
-          <main className="flex-grow">{children}</main>
-          <Footer />
-        </ThemeProvider>
+        <Navbar />
+        <main className="flex-grow">{children}</main>
+        <Footer />
       </body>
     </html>
   )
