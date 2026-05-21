@@ -1,363 +1,356 @@
-'use client'
+"use client"
 
-import { useState } from 'react'
-import Image from 'next/image'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import { useState, useRef } from "react"
+import Image from "next/image"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from '@/components/ui/dialog'
-import { motion } from 'framer-motion'
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
+import { Card3D } from "@/components/3d-card"
+import { FadeIn, StaggerChildren, StaggerItem } from "@/components/scroll-animations"
 
 interface CakeItem {
-	id: number
-	title: string
-	description: string
-	category: string
-	imageUrl: string
-	price?: string
+  id: number
+  title: string
+  description: string
+  category: string
+  imageUrl: string
 }
 
 export default function GalleryPage() {
-	const [selectedImage, setSelectedImage] = useState<CakeItem | null>(null)
-	const [filter, setFilter] = useState('all')
+  const [selectedImage, setSelectedImage] = useState<CakeItem | null>(null)
+  const [filter, setFilter] = useState("all")
+  const galleryRef = useRef(null)
+  const { scrollYProgress } = useScroll({
+    target: galleryRef,
+    offset: ["start start", "end start"],
+  })
 
-	const cakeItems: CakeItem[] = [
-		{
-			id: 1,
-			title: 'Torta Equina',
-			description: 'Torta de chocolate con relleno de frambuesas frescas y ganache',
-			category: 'customized',
-			imageUrl: '/gallery/torta-equina.png',
+  const headerY = useTransform(scrollYProgress, [0, 0.5], [0, -100])
+  const headerOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
 
-			price: 'Cotizar',
-		},
-		{
-			id: 2,
-			title: 'Torta Casino',
-			description: 'Torta de casino con decoración de cartas y dados',
-			category: 'customized',
-			imageUrl: '/gallery/torta-casino.png',
-			price: 'Cotizar',
-		},
-		{
-			id: 3,
-			title: 'Torta Freefire',
-			description: 'Torta temática del juego Freefire con relleno de crema oreo y dulce de leche',
-			category: 'customized',
-			imageUrl: '/gallery/torta-freefire.png',
+  const cakeItems: CakeItem[] = [
+    {
+      id: 1,
+      title: "Torta de Chocolate y Frambuesas",
+      description: "Deliciosa torta de chocolate con relleno de frambuesas frescas",
+      category: "birthday",
+      imageUrl: "/placeholder.svg?height=500&width=500",
+    },
+    {
+      id: 2,
+      title: "Cupcakes de Vainilla",
+      description: "Cupcakes de vainilla con frosting de crema de mantequilla",
+      category: "cupcakes",
+      imageUrl: "/placeholder.svg?height=500&width=500",
+    },
+    {
+      id: 3,
+      title: "Torta de Boda Elegante",
+      description: "Torta de tres pisos con decoración floral para bodas",
+      category: "wedding",
+      imageUrl: "/placeholder.svg?height=500&width=500",
+    },
+    {
+      id: 4,
+      title: "Torta de Cumpleaños de Unicornio",
+      description: "Colorida torta temática de unicornio ideal para fiestas infantiles",
+      category: "birthday",
+      imageUrl: "/placeholder.svg?height=500&width=500",
+    },
+    {
+      id: 5,
+      title: "Cupcakes de Chocolate",
+      description: "Cupcakes de chocolate con chips de chocolate y frosting de ganache",
+      category: "cupcakes",
+      imageUrl: "/placeholder.svg?height=500&width=500",
+    },
+    {
+      id: 6,
+      title: "Torta de Aniversario",
+      description: "Elegante torta para celebrar aniversarios con decoración dorada",
+      category: "wedding",
+      imageUrl: "/placeholder.svg?height=500&width=500",
+    },
+    {
+      id: 7,
+      title: "Torta de Princesa",
+      description: "Torta de cumpleaños con temática de princesa y castillo",
+      category: "birthday",
+      imageUrl: "/placeholder.svg?height=500&width=500",
+    },
+    {
+      id: 8,
+      title: "Cupcakes de Fresa",
+      description: "Cupcakes de vainilla con frosting de fresa y decoraciones rosadas",
+      category: "cupcakes",
+      imageUrl: "/placeholder.svg?height=500&width=500",
+    },
+    {
+      id: 9,
+      title: "Torta de Compromiso",
+      description: "Elegante torta para celebrar compromisos con detalles personalizados",
+      category: "wedding",
+      imageUrl: "/placeholder.svg?height=500&width=500",
+    },
+  ]
 
-			price: 'Cotizar',
-		},
-		{
-			id: 4,
-			title: '',
-			description: '',
-			category: 'desserts',
+  // Filtrar los elementos según la categoría seleccionada
+  const filteredItems = filter === "all" ? cakeItems : cakeItems.filter((item) => item.category === filter)
 
-			imageUrl: '/gallery/postre-pascuas.png',
-			price: '$20.000',
-		},
-		{
-			id: 5,
-			title: 'Huevo de Pascua relleno',
-			description: 'El relleno y la decoración es a elección; Cadbury, Oreo o Chocotorta',
-			category: 'desserts',
-			imageUrl: '/placeholder.svg?height=500&width=500',
-			price: 'Desde $4.000 c/u',
-		},
-		{
-			id: 6,
-			title: 'Torta de Aniversario',
-			description: 'Elegante torta para celebrar aniversarios con decoración dorada',
-			category: 'wedding',
-			imageUrl: '/placeholder.svg?height=500&width=500',
-			price: 'Desde $65.000',
-		},
-		{
-			id: 7,
-			title: 'Torta de Princesa',
-			description: 'Torta de cumpleaños con temática de princesa y castillo encantado',
-			category: 'birthday',
-			imageUrl: '/placeholder.svg?height=500&width=500',
-			price: 'Desde $50.000',
-		},
-		{
-			id: 8,
-			title: 'Cupcakes de Fresa',
-			description: 'Cupcakes de vainilla con frosting de fresa y decoraciones rosadas',
-			category: 'cupcakes',
-			imageUrl: '/placeholder.svg?height=500&width=500',
-			price: 'Desde $3.800 c/u',
-		},
-		{
-			id: 9,
-			title: 'Torta Red Velvet',
-			description: 'Clásica torta red velvet con cream cheese frosting',
-			category: 'special',
-			imageUrl: '/placeholder.svg?height=500&width=500',
-			price: 'Desde $48.000',
-		},
-		{
-			id: 10,
-			title: 'Torta de Compromiso',
-			description: 'Elegante torta para celebrar compromisos con detalles personalizados',
-			category: 'wedding',
-			imageUrl: '/placeholder.svg?height=500&width=500',
-			price: 'Desde $70.000',
-		},
-	]
+  // Función para manejar el cambio de filtro
+  const handleFilterChange = (newFilter: string) => {
+    setFilter(newFilter)
+  }
 
-	const filteredItems =
-		filter === 'all' ? cakeItems : cakeItems.filter((item) => item.category === filter)
+  return (
+    <>
+      {/* Hero Section */}
+      <section className="relative h-[70vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-pink-50 to-white">
+        <div className="container px-4 md:px-6 text-center relative z-10">
+          <motion.div style={{ y: headerY, opacity: headerOpacity }} className="max-w-3xl mx-auto space-y-6">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{
+                type: "spring",
+                stiffness: 260,
+                damping: 20,
+                delay: 0.2,
+              }}
+              className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mx-auto"
+            >
+              <motion.div
+                animate={{
+                  rotate: [0, 10, -10, 0],
+                  scale: [1, 1.1, 1],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Number.POSITIVE_INFINITY,
+                  repeatType: "reverse",
+                }}
+              >
+                🍰
+              </motion.div>
+            </motion.div>
 
-	const getCategoryName = (category: string) => {
-		const categories = {
-			all: 'Todos',
-			birthday: 'Cumpleaños',
-			customized: 'Temática',
-			desserts: 'Postre',
-			candybar: 'Candy Bar',
-		}
-		return categories[category as keyof typeof categories] || category
-	}
+            <h1 className="text-4xl font-bold tracking-tighter sm:text-6xl gradient-text font-display">
+              Nuestra Galería de Tortas
+            </h1>
 
-	const getCategoryEmoji = (category: string) => {
-		const emojis = {
-			birthday: '🎂',
-			customized: '🍰',
-			desserts: '🍩',
-			candybar: '✨',
-		}
-		return emojis[category as keyof typeof emojis] || '🍰'
-	}
+            <p className="text-muted-foreground text-xl">
+              Explora nuestra colección de creaciones únicas y personalizadas para cada ocasión
+            </p>
 
-	return (
-		<div className='min-h-screen bg-background'>
-			{/* Hero Section */}
-			<section className='py-20 bg-gradient-to-br from-primary/5 via-background to-secondary/5'>
-				<div className='container px-4 md:px-6 text-center'>
-					<motion.div
-						initial={{ opacity: 0, y: 20 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.6 }}
-						className='max-w-4xl mx-auto space-y-6'
-					>
-						<div className='inline-block px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4'>
-							✨ Galería de Creaciones
-						</div>
-						<h1 className='text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter'>
-							Nuestras Dulces
-							<br />
-							<span className='text-primary'>Creaciones</span>
-						</h1>
-						<p className='text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed'>
-							Descubre nuestra colección de tortas artesanales, cada una creada con amor y los
-							mejores ingredientes
-						</p>
-					</motion.div>
-				</div>
-			</section>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="flex flex-wrap gap-4 justify-center"
+            >
+              {[
+                { label: "Todas", value: "all" },
+                { label: "Cumpleaños", value: "birthday" },
+                { label: "Bodas", value: "wedding" },
+                { label: "Cupcakes", value: "cupcakes" },
+              ].map((category) => (
+                <motion.div key={category.value} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button
+                    variant={filter === category.value ? "default" : "outline"}
+                    className="rounded-full px-6 py-2 text-lg"
+                    onClick={() => handleFilterChange(category.value)}
+                  >
+                    {category.label}
+                  </Button>
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.div>
+        </div>
 
-			{/* Gallery Section */}
-			<section className='py-20'>
-				<div className='container px-4 md:px-6'>
-					{/* Filter Buttons */}
-					<motion.div
-						initial={{ opacity: 0, y: 20 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.6, delay: 0.2 }}
-						className='flex flex-wrap justify-center gap-4 mb-12'
-					>
-						{['all', 'birthday', 'customized', 'desserts', 'candybar'].map((category) => (
-							<Button
-								key={category}
-								variant={filter === category ? 'default' : 'outline'}
-								onClick={() => setFilter(category)}
-								className='transition-all duration-300 hover:scale-105'
-							>
-								{category !== 'all' && getCategoryEmoji(category)} {getCategoryName(category)}
-							</Button>
-						))}
-					</motion.div>
+        <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-background to-transparent"></div>
+      </section>
 
-					{/* Gallery Grid */}
-					<motion.div
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-						transition={{ duration: 0.6, delay: 0.4 }}
-						className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'
-					>
-						{filteredItems.length > 0 ? (
-							filteredItems.map((item, index) => (
-								<motion.div
-									key={item.id}
-									initial={{ opacity: 0, y: 20 }}
-									animate={{ opacity: 1, y: 0 }}
-									transition={{ duration: 0.3, delay: index * 0.1 }}
-								>
-									<Card className='group overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-300 h-full max-w-sm mx-auto'>
-										<Dialog>
-											<DialogTrigger asChild>
-												<CardContent className='p-0 h-full cursor-pointer'>
-													{/* Cambio principal: aspect-[4/3] en lugar de aspect-square */}
-													<div className='relative aspect-[4/3] overflow-hidden bg-gray-50'>
-														<Image
-															src={item.imageUrl}
-															alt={item.title}
-															fill
-															className='object-contain transition-transform duration-300 group-hover:scale-105 p-2'
-														/>
-														<div className='absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
-															<span className='text-white text-sm font-medium px-3 py-1 bg-primary/90 rounded-full backdrop-blur-sm'>
-																{getCategoryEmoji(item.category)} {getCategoryName(item.category)}
-															</span>
-														</div>
-													</div>
-													<div className='p-4'>
-														<h3 className='text-lg font-bold mb-1 line-clamp-1'>{item.title}</h3>
-														<p className='text-sm text-muted-foreground mb-2 line-clamp-2'>
-															{item.description}
-														</p>
-														{item.price && (
-															<p className='text-primary font-semibold text-base'>{item.price}</p>
-														)}
-													</div>
-												</CardContent>
-											</DialogTrigger>
-											{/* Modal permanece igual */}
-											<DialogContent className='sm:max-w-[800px]'>
-												<div className='grid md:grid-cols-2 gap-6'>
-													{/* En el modal también cambio para mostrar imagen completa */}
-													<div className='relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-gray-50'>
-														<Image
-															src={item.imageUrl}
-															alt={item.title}
-															fill
-															className='object-contain p-4'
-														/>
-													</div>
-													<div className='flex flex-col justify-between'>
-														<div>
-															<DialogHeader className='mb-6'>
-																<div className='flex items-center gap-2 mb-2'>
-																	<span className='text-2xl'>
-																		{getCategoryEmoji(item.category)}
-																	</span>
-																	<span className='px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium'>
-																		{getCategoryName(item.category)}
-																	</span>
-																</div>
-																<DialogTitle className='text-2xl font-bold mb-2'>
-																	{item.title}
-																</DialogTitle>
-																<DialogDescription className='text-lg leading-relaxed'>
-																	{item.description}
-																</DialogDescription>
-															</DialogHeader>
+      {/* Gallery Section */}
+      <section ref={galleryRef} className="py-20 relative bg-white">
+        <div className="container px-4 md:px-6">
+          <StaggerChildren className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <AnimatePresence>
+              {filteredItems.length > 0 ? (
+                filteredItems.map((cake) => (
+                  <StaggerItem key={cake.id} direction="up">
+                    <Card3D className="h-full">
+                      <Card className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow duration-300 h-full border-0">
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <CardContent className="p-0 h-full" onClick={() => setSelectedImage(cake)}>
+                              <div className="relative aspect-square overflow-hidden">
+                                <Image
+                                  src={cake.imageUrl || "/placeholder.svg"}
+                                  alt={cake.title}
+                                  fill
+                                  className="object-cover transition-transform duration-700 hover:scale-110"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                                  <span className="text-white text-sm font-medium px-3 py-1 bg-primary/80 rounded-full w-fit mb-2">
+                                    {cake.category === "birthday"
+                                      ? "Cumpleaños"
+                                      : cake.category === "wedding"
+                                        ? "Bodas"
+                                        : "Cupcakes"}
+                                  </span>
+                                  <h3 className="text-xl font-bold text-white">{cake.title}</h3>
+                                  <p className="text-white/80 text-sm mt-1">{cake.description}</p>
+                                </div>
+                              </div>
+                              <div className="p-6">
+                                <h3 className="text-xl font-bold">{cake.title}</h3>
+                                <p className="text-sm text-muted-foreground mt-1">{cake.description}</p>
+                              </div>
+                            </CardContent>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-[700px] p-0 overflow-hidden bg-transparent border-0">
+                            <motion.div
+                              initial={{ opacity: 0, scale: 0.9 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              exit={{ opacity: 0, scale: 0.9 }}
+                              className="bg-background rounded-lg overflow-hidden"
+                            >
+                              <div className="grid md:grid-cols-2 gap-0">
+                                <div className="relative aspect-square w-full overflow-hidden">
+                                  <Image
+                                    src={cake.imageUrl || "/placeholder.svg"}
+                                    alt={cake.title}
+                                    fill
+                                    className="object-cover"
+                                  />
+                                </div>
+                                <div className="p-8 flex flex-col">
+                                  <DialogHeader className="mb-4">
+                                    <DialogTitle className="text-2xl font-display gradient-text">
+                                      {cake.title}
+                                    </DialogTitle>
+                                    <DialogDescription className="text-lg">{cake.description}</DialogDescription>
+                                  </DialogHeader>
 
-															<div className='space-y-4'>
-																<div>
-																	<h4 className='font-semibold mb-3 text-lg'>
-																		✨ Características:
-																	</h4>
-																	<ul className='space-y-2'>
-																		<li className='flex items-center gap-3'>
-																			<span className='h-2 w-2 bg-primary rounded-full'></span>
-																			<span>Sabores personalizables</span>
-																		</li>
-																		<li className='flex items-center gap-3'>
-																			<span className='h-2 w-2 bg-primary rounded-full'></span>
-																			<span>Decoración artesanal</span>
-																		</li>
-																		<li className='flex items-center gap-3'>
-																			<span className='h-2 w-2 bg-primary rounded-full'></span>
-																			<span>Ingredientes premium</span>
-																		</li>
-																		<li className='flex items-center gap-3'>
-																			<span className='h-2 w-2 bg-primary rounded-full'></span>
-																			<span>Diseño personalizado</span>
-																		</li>
-																	</ul>
-																</div>
-															</div>
-														</div>
+                                  <div className="flex flex-col gap-4 flex-grow">
+                                    <div className="space-y-2">
+                                      <h4 className="font-medium">Detalles:</h4>
+                                      <ul className="space-y-1">
+                                        <li className="flex items-center gap-2">
+                                          <span className="h-2 w-2 bg-primary rounded-full"></span>
+                                          <span>Sabores personalizables</span>
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <span className="h-2 w-2 bg-primary rounded-full"></span>
+                                          <span>Decoración artesanal</span>
+                                        </li>
+                                        <li className="flex items-center gap-2">
+                                          <span className="h-2 w-2 bg-primary rounded-full"></span>
+                                          <span>Ingredientes de alta calidad</span>
+                                        </li>
+                                      </ul>
+                                    </div>
 
-														<div className='mt-6 pt-6 border-t'>
-															{item.price && (
-																<div className='mb-4'>
-																	<p className='text-sm text-muted-foreground mb-1'>
-																		Precio desde:
-																	</p>
-																	<p className='text-2xl font-bold text-primary'>{item.price}</p>
-																</div>
-															)}
-															<Button className='w-full' size='lg'>
-																💬 Solicitar Cotización
-															</Button>
-														</div>
-													</div>
-												</div>
-											</DialogContent>
-										</Dialog>
-									</Card>
-								</motion.div>
-							))
-						) : (
-							<div className='col-span-full text-center py-20'>
-								<motion.div
-									initial={{ opacity: 0, scale: 0.9 }}
-									animate={{ opacity: 1, scale: 1 }}
-									className='space-y-4'
-								>
-									<div className='text-6xl'>🔍</div>
-									<h3 className='text-2xl font-bold'>No se encontraron resultados</h3>
-									<p className='text-muted-foreground max-w-md mx-auto'>
-										No hay productos que coincidan con el filtro seleccionado. Prueba con otra
-										categoría.
-									</p>
-									<Button onClick={() => setFilter('all')} className='mt-4'>
-										Ver todos los productos
-									</Button>
-								</motion.div>
-							</div>
-						)}
-					</motion.div>
-				</div>
-			</section>
+                                    <div className="space-y-2 mt-auto">
+                                      <h4 className="font-medium">Perfecto para:</h4>
+                                      <div className="flex flex-wrap gap-2">
+                                        {cake.category === "birthday" && (
+                                          <>
+                                            <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
+                                              Cumpleaños
+                                            </span>
+                                            <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
+                                              Fiestas
+                                            </span>
+                                          </>
+                                        )}
+                                        {cake.category === "wedding" && (
+                                          <>
+                                            <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
+                                              Bodas
+                                            </span>
+                                            <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
+                                              Aniversarios
+                                            </span>
+                                          </>
+                                        )}
+                                        {cake.category === "cupcakes" && (
+                                          <>
+                                            <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
+                                              Eventos
+                                            </span>
+                                            <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
+                                              Regalos
+                                            </span>
+                                          </>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
 
-			{/* CTA Section */}
-			<section className='py-20 bg-gradient-to-b from-primary/5 to-background'>
-				<div className='container px-4 md:px-6 text-center'>
-					<motion.div
-						initial={{ opacity: 0, y: 20 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.6 }}
-						className='max-w-3xl mx-auto space-y-6'
-					>
-						<h2 className='text-4xl font-bold tracking-tighter'>
-							¿Quieres ver tu torta soñada en nuestra galería?
-						</h2>
-						<p className='text-xl text-muted-foreground'>
-							Contáctanos para hacer realidad tus ideas más dulces y crear algo único para tu
-							ocasión especial
-						</p>
-						<Button
-							size='lg'
-							className='mt-6 px-8 py-6 text-lg hover:scale-105 transition-transform'
-						>
-							<a href='/contact' className='flex items-center gap-2'>
-								💬 Contactar Ahora
-							</a>
-						</Button>
-					</motion.div>
-				</div>
-			</section>
-		</div>
-	)
+                                  <div className="flex justify-end gap-4 mt-6">
+                                    <Button variant="outline" className="border-animated">
+                                      Compartir
+                                    </Button>
+                                    <Button className="btn-fancy">Pedir Similar</Button>
+                                  </div>
+                                </div>
+                              </div>
+                            </motion.div>
+                          </DialogContent>
+                        </Dialog>
+                      </Card>
+                    </Card3D>
+                  </StaggerItem>
+                ))
+              ) : (
+                <div className="col-span-full text-center py-20">
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="space-y-4"
+                  >
+                    <div className="text-5xl mx-auto">🔍</div>
+                    <h3 className="text-2xl font-bold">No se encontraron resultados</h3>
+                    <p className="text-muted-foreground">No hay productos que coincidan con el filtro seleccionado.</p>
+                    <Button onClick={() => setFilter("all")} className="mt-4">
+                      Ver todos los productos
+                    </Button>
+                  </motion.div>
+                </div>
+              )}
+            </AnimatePresence>
+          </StaggerChildren>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-b from-primary-50 to-background relative overflow-hidden">
+        <div className="container px-4 md:px-6 text-center relative z-10">
+          <FadeIn>
+            <div className="max-w-3xl mx-auto space-y-6">
+              <h2 className="text-4xl font-bold tracking-tighter gradient-text font-display">
+                ¿Quieres ver tu torta soñada en nuestra galería?
+              </h2>
+              <p className="text-xl text-muted-foreground">Contáctanos para hacer realidad tus ideas más dulces</p>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button asChild size="lg" className="mt-4 px-8 py-6 text-lg btn-fancy">
+                  <a href="/contact">Contactar Ahora</a>
+                </Button>
+              </motion.div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+    </>
+  )
 }
