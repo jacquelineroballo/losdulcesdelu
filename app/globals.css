@@ -496,9 +496,12 @@ button,
   }
 }
 
-/* Scroll suave */
-html {
+/* Scroll suave y prevenir scroll horizontal */
+html,
+body {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 /* Scrollbar personalizado */

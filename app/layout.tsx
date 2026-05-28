@@ -35,10 +35,10 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" className={`${poppins.variable} ${pacifico.variable}`}>
-      <body className={`${inter.className} min-h-screen flex flex-col`}>
+    <html lang="es" className={`${poppins.variable} ${pacifico.variable} overflow-x-hidden`}>
+      <body className={`${inter.className} min-h-screen flex flex-col overflow-x-hidden`}>
         <Navbar />
-        <main className="flex-grow">{children}</main>
+        <main className="flex-grow overflow-x-hidden">{children}</main>
         <Footer />
       </body>
     </html>
