@@ -42,7 +42,7 @@ export function FadeIn({
 }: FadeInProps) {
   const controls = useAnimation()
   const ref = useRef(null)
-  const isInView = useInView(ref, { once, threshold })
+  const isInView = useInView(ref, { once, amount: threshold })
 
   useEffect(() => {
     if (isInView) {
@@ -111,7 +111,7 @@ export function StaggerChildren({
 }: StaggerChildrenProps) {
   const controls = useAnimation()
   const ref = useRef(null)
-  const isInView = useInView(ref, { once, threshold })
+  const isInView = useInView(ref, { once, amount: threshold })
 
   useEffect(() => {
     if (isInView) {
