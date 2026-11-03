@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react'
 import Image from 'next/image'
+import useSWR from 'swr'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -10,6 +11,9 @@ import { StarIcon, ChevronRight, ChevronLeft, Heart } from 'lucide-react'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { Card3D } from '@/components/3d-card'
 import { FadeIn, StaggerChildren, StaggerItem } from '@/components/scroll-animations'
+import { defaultSiteImages, type SiteImages } from '@/lib/site-images'
+
+const siteImagesFetcher = (url: string) => fetch(url, { cache: 'no-store' }).then((response) => response.json() as Promise<SiteImages>)
 
 const CustomCakeIcon = ({ className }: { className?: string }) => (
 	<svg
@@ -490,8 +494,9 @@ const MixerIcon = ({ className }: { className?: string }) => (
 	</svg>
 )
 
-export default function Home() {
-	const [slideIndex, setSlideIndex] = useState(0)
+	export default function Home() {
+		const { data: siteImages = defaultSiteImages } = useSWR<SiteImages>('/api/site-images', siteImagesFetcher, { fallbackData: defaultSiteImages })
+		const [slideIndex, setSlideIndex] = useState(0)
 	const heroRef = useRef(null)
 
 	const testimonials = [
@@ -570,9 +575,9 @@ export default function Home() {
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ duration: 0.5, delay: 0.2 }}
 							>
-								Delicias{' '}
-								<span className='font-display gradient-text sparkle p-1'>Personalizadas</span> para
-								cada ocasión
+Delicias{' '}
+									<span className='font-display gradient-text sparkle p-1'>Personalizadas</span> para
+									cada ocasión
 							</motion.h1>
 
 							<motion.p
@@ -581,8 +586,8 @@ export default function Home() {
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ duration: 0.5, delay: 0.4 }}
 							>
-								Transformamos ingredientes simples en obras de arte comestibles. Siempre con ese
-								sabor único que te hace sentir en casa.{' '}
+Transformamos ingredientes simples en obras de arte comestibles. Siempre con ese
+									sabor único que te hace sentir en casa.{' '}
 								<Heart className='inline animate-pulse text-red-400 w-4 h-4' />
 							</motion.p>
 
@@ -614,7 +619,7 @@ export default function Home() {
 							<Card3D className='w-full'>
 								<div className='relative w-full h-[300px] md:h-[350px] lg:h-[400px] rounded-xl overflow-hidden'>
 									<Image
-										src='/gallery/hero.png'
+										src={siteImages.homeHero}
 										alt='Tortas de cumpleaños personalizadas'
 										fill
 										className='object-cover'
@@ -657,11 +662,11 @@ export default function Home() {
 					<FadeIn>
 						<div className='grid gap-6 text-center max-w-3xl mx-auto mb-16'>
 							<h2 className='text-4xl font-bold tracking-tighter md:text-5xl/tight gradient-text'>
-								Por qué elegirnos
+Por qué elegirnos
 							</h2>
 							<p className='text-xl text-muted-foreground'>
-								En Los dulces de Lu, cada creación es única y especial, hecha con amor e
-								ingredientes de calidad
+En Los dulces de Lu, cada creación es única y especial, hecha con amor e
+									ingredientes de calidad
 							</p>
 						</div>
 					</FadeIn>
@@ -720,7 +725,7 @@ export default function Home() {
 					<FadeIn>
 						<div className='grid gap-6 text-center max-w-3xl mx-auto mb-16'>
 							<h2 className='text-4xl font-bold tracking-tighter md:text-5xl/tight gradient-text'>
-								Nuestras Especialidades
+Nuestras Especialidades
 							</h2>
 							<p className='text-xl text-muted-foreground'>
 								Descubre nuestra variedad de creaciones para cada momento especial
@@ -895,8 +900,8 @@ export default function Home() {
 									¿Listos para probar la magia?
 								</h2>
 								<p className='text-xl text-muted-foreground'>
-									Da el primer paso hacia la satisfacción dulce: realiza tu pedido o suscríbete a
-									nuestro boletín para recibir actualizaciones y promociones.
+Da el primer paso hacia la satisfacción dulce: realiza tu pedido o suscríbete a
+											nuestro boletín para recibir actualizaciones y promociones.
 								</p>
 							</div>
 						</FadeIn>
