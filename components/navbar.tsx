@@ -58,7 +58,7 @@ export function Navbar() {
 	return (
 		<header
 			className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-				scrolled ? 'glass py-2' : 'bg-transparent py-4'
+				scrolled ? 'glass border-b border-border/60 bg-background/85 py-2 shadow-lg shadow-foreground/5 backdrop-blur-md backdrop-saturate-150' : 'bg-transparent py-4'
 			}`}
 		>
 			<div className='container flex items-center justify-between px-4 md:px-6'>
