@@ -1,0 +1,127 @@
+"use client"
+
+import { ChangeEvent, FormEvent, useMemo, useState } from "react"
+import { ImagePlus, Pencil, Plus, Search, Trash2, X } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+
+type GalleryItem = {
+  id: number
+  title: string
+  description: string
+  category: string
+  imageUrl: string
+  price: string
+}
+
+const initialItems: GalleryItem[] = [
+  { id: 1, title: "Torta Equina", description: "Diseño personalizado para celebrar un momento especial.", category: "Tortas", imageUrl: "/gallery/torta-equina.png", price: "$25.000" },
+  { id: 2, title: "Torta Casino", description: "Una torta temática con detalles hechos a mano.", category: "Tortas", imageUrl: "/gallery/torta-casino.png", price: "$28.000" },
+  { id: 3, title: "Torta Freefire", description: "Decoración colorida y personalizada para cumpleaños.", category: "Tortas", imageUrl: "/gallery/torta-freefire.png", price: "$30.000" },
+  { id: 4, title: "Postre de Pascuas", description: "Postre especial con decoración temática.", category: "Postres", imageUrl: "/gallery/postre-pascuas.png", price: "$20.000" },
+]
+
+const emptyForm = { title: "", description: "", category: "Tortas", imageUrl: "", price: "" }
+
+export function AdminGalleryPanel() {
+  const [items, setItems] = useState<GalleryItem[]>(initialItems)
+  const [editingId, setEditingId] = useState<number | null>(null)
+  const [form, setForm] = useState(emptyForm)
+  const [query, setQuery] = useState("")
+
+  const filteredItems = useMemo(
+    () => items.filter((item) => `${item.title} ${item.category}`.toLowerCase().includes(query.toLowerCase())),
+    [items, query],
+  )
+
+  function startNew() {
+    setEditingId(null)
+    setForm(emptyForm)
+  }
+
+  function startEdit(item: GalleryItem) {
+    setEditingId(item.id)
+    setForm({ title: item.title, description: item.description, category: item.category, imageUrl: item.imageUrl, price: item.price })
+  }
+
+  function handleImageUpload(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    if (!file) return
+    setForm((current) => ({ ...current, imageUrl: URL.createObjectURL(file) }))
+  }
+
+  function saveItem(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    if (!form.title.trim() || !form.imageUrl.trim()) return
+
+    if (editingId === null) {
+      setItems((current) => [...current, { ...form, id: Date.now() }])
+    } else {
+      setItems((current) => current.map((item) => item.id === editingId ? { ...item, ...form } : item))
+    }
+    startNew()
+  }
+
+  function deleteItem(id: number) {
+    setItems((current) => current.filter((item) => item.id !== id))
+    if (editingId === id) startNew()
+  }
+
+  return (
+    <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
+      <section className="space-y-5">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">Contenido</p>
+            <h2 className="font-display text-3xl text-foreground">Galería de productos</h2>
+          </div>
+          <Button onClick={startNew} className="gap-2"><Plus className="size-4" />Agregar imagen</Button>
+        </div>
+        <div className="relative">
+          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+          <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar por nombre o categoría" className="pl-9" />
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {filteredItems.map((item) => (
+            <article key={item.id} className="overflow-hidden rounded-2xl border bg-card shadow-sm">
+              <div className="aspect-[4/3] overflow-hidden bg-muted">
+                <img src={item.imageUrl} alt={item.title} className="size-full object-cover" />
+              </div>
+              <div className="space-y-3 p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div><p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{item.category}</p><h3 className="font-semibold text-foreground">{item.title}</h3></div>
+                  <p className="font-semibold text-primary">{item.price || "Sin precio"}</p>
+                </div>
+                <p className="line-clamp-2 text-sm text-muted-foreground">{item.description || "Sin descripción"}</p>
+                <div className="flex gap-2 pt-1">
+                  <Button variant="outline" size="sm" onClick={() => startEdit(item)} className="gap-2"><Pencil className="size-3.5" />Editar</Button>
+                  <Button variant="ghost" size="sm" onClick={() => deleteItem(item.id)} className="gap-2 text-destructive hover:text-destructive"><Trash2 className="size-3.5" />Eliminar</Button>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <aside className="h-fit rounded-2xl border bg-card p-5 shadow-sm lg:sticky lg:top-24">
+        <div className="mb-5 flex items-start justify-between gap-3">
+          <div><p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">Editor</p><h2 className="text-xl font-semibold text-foreground">{editingId === null ? "Nueva imagen" : "Editar producto"}</h2></div>
+          {editingId !== null && <Button variant="ghost" size="icon" onClick={startNew} aria-label="Cancelar edición"><X className="size-4" /></Button>}
+        </div>
+        <form onSubmit={saveItem} className="space-y-4">
+          <div className="rounded-xl border border-dashed p-4 text-center">
+            {form.imageUrl ? <img src={form.imageUrl} alt="Vista previa" className="mx-auto mb-3 aspect-video w-full rounded-lg object-cover" /> : <ImagePlus className="mx-auto mb-2 size-8 text-muted-foreground" />}
+            <label className="cursor-pointer text-sm font-medium text-primary hover:underline">{form.imageUrl ? "Cambiar imagen" : "Subir imagen"}<input type="file" accept="image/*" onChange={handleImageUpload} className="sr-only" /></label>
+            <Input value={form.imageUrl} onChange={(event) => setForm((current) => ({ ...current, imageUrl: event.target.value }))} placeholder="o pega una URL" className="mt-3" aria-label="URL de imagen" />
+          </div>
+          <Input required value={form.title} onChange={(event) => setForm((current) => ({ ...current, title: event.target.value }))} placeholder="Nombre del producto" aria-label="Nombre del producto" />
+          <Textarea value={form.description} onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))} placeholder="Descripción" aria-label="Descripción" />
+          <div className="grid grid-cols-2 gap-3"><Input value={form.category} onChange={(event) => setForm((current) => ({ ...current, category: event.target.value }))} placeholder="Categoría" aria-label="Categoría" /><Input value={form.price} onChange={(event) => setForm((current) => ({ ...current, price: event.target.value }))} placeholder="Precio" aria-label="Precio" /></div>
+          <Button type="submit" className="w-full">{editingId === null ? "Agregar a la galería" : "Guardar cambios"}</Button>
+        </form>
+        <p className="mt-4 text-xs leading-relaxed text-muted-foreground">Modo provisorio: los cambios se mantienen mientras esta página permanezca abierta. Luego podemos conectarlo a Supabase para guardarlos permanentemente.</p>
+      </aside>
+    </div>
+  )
+}
