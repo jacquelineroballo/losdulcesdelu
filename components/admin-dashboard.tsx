@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
+import useSWR from "swr"
 import {
   CakeSlice,
   ChevronRight,
@@ -17,6 +18,10 @@ import {
 import { AdminGalleryPanel } from "@/components/admin-gallery-panel"
 import { AdminHomeImagesPanel } from "@/components/admin-home-images-panel"
 import { AdminAboutContentPanel } from "@/components/admin-about-content-panel"
+import { initialGalleryItems, type GalleryItem } from "@/lib/gallery-storage"
+
+const galleryFetcher = (url: string) => fetch(url, { cache: "no-store" }).then((response) => response.json() as Promise<GalleryItem[]>)
+const categoryName = (category: string) => category.replace(/[-_]/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase())
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -96,7 +101,7 @@ export function AdminDashboard() {
 
         <main className="min-w-0 flex-1">
           <header className="flex min-h-20 items-center justify-between gap-4 border-b border-border bg-card px-4 sm:px-8">
-            <div className="flex items-center gap-3"><Button variant="ghost" size="icon" className="md:hidden" onClick={() => setSidebarOpen(true)} aria-label="Abrir menú"><Menu /></Button><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Panel de administración</p><h1 className="mt-1 font-display text-3xl leading-none sm:text-4xl">{activeItem.label}</h1></div></div>
+            <div className="flex items-center gap-3"><Button variant="ghost" size="icon" className="md:hidden" onClick={() => setSidebarOpen(true)} aria-label="Abrir menú"><Menu /></Button><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Panel de administración</p><h1 className="mt-1 font-display text-2xl font-normal leading-none sm:text-3xl">{activeItem.label}</h1></div></div>
           </header>
 
           <div className="p-4 sm:p-8">
@@ -113,17 +118,20 @@ export function AdminDashboard() {
 }
 
 function Overview({ onOpenGallery, onOpenHome }: { onOpenGallery: () => void; onOpenHome: () => void }) {
+  const { data: galleryItems = initialGalleryItems } = useSWR<GalleryItem[]>("/api/gallery", galleryFetcher, { fallbackData: initialGalleryItems })
+  const categories = useMemo(() => Array.from(new Set(galleryItems.map((item) => item.category).filter(Boolean))).sort(), [galleryItems])
+
   return <div className="flex flex-col gap-8">
-    <div className="max-w-3xl"><p className="text-sm font-medium text-primary">Centro de gestión</p><h2 className="mt-2 font-display text-4xl leading-tight sm:text-6xl">Gestioná tu pastelería.</h2></div>
-    <Card className="overflow-hidden"><CardHeader className="flex-row items-center justify-between gap-4"><div><CardTitle className="font-display text-3xl">Acciones rápidas</CardTitle><p className="mt-1 text-sm text-muted-foreground">Elegí una sección para empezar.</p></div><Button onClick={onOpenGallery}>Abrir galería <ChevronRight data-icon="inline-end" /></Button></CardHeader><Separator /><CardContent className="grid gap-3 p-4 sm:grid-cols-2"><QuickAction icon={ImageIcon} title="Gestionar galería" copy="Agregá, editá o quitá productos e imágenes." onClick={onOpenGallery} /><QuickAction icon={CakeSlice} title="Imágenes de inicio" copy="Elegí, subí o reemplazá imágenes del inicio." onClick={onOpenHome} /></CardContent></Card>
+    <div className="max-w-3xl"><p className="text-sm text-primary">Centro de gestión</p><h2 className="mt-2 font-display text-3xl font-normal leading-tight sm:text-4xl">Gestioná tu pastelería.</h2></div>
+    <Card className="overflow-hidden"><CardHeader className="flex-row items-center justify-between gap-4"><div><CardTitle className="font-display text-2xl font-normal">Acciones rápidas</CardTitle><p className="mt-1 text-sm text-muted-foreground">Elegí una sección para empezar.</p></div><Button onClick={onOpenGallery}>Abrir galería <ChevronRight data-icon="inline-end" /></Button></CardHeader><Separator /><CardContent className="grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3"><QuickAction icon={ImageIcon} title="Gestionar galería" copy="Agregá, editá o quitá productos e imágenes." onClick={onOpenGallery} /><QuickAction icon={CakeSlice} title="Imágenes de inicio" copy="Elegí, subí o reemplazá imágenes del inicio." onClick={onOpenHome} />{categories.map((category) => <QuickAction key={category} icon={ImageIcon} title={categoryName(category)} copy="Gestionar productos de esta categoría." onClick={onOpenGallery} />)}</CardContent></Card>
   </div>
 }
 
 function QuickAction({ icon: Icon, title, copy, onClick }: { icon: typeof ImageIcon; title: string; copy: string; onClick: () => void }) {
-  return <button type="button" onClick={onClick} className="group flex items-start gap-4 rounded-xl border border-border p-4 text-left transition-colors hover:border-primary/40 hover:bg-primary/5"><div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted text-primary transition-colors group-hover:bg-primary/10"><Icon /></div><div><p className="font-medium">{title}</p><p className="mt-1 text-sm leading-relaxed text-muted-foreground">{copy}</p></div></button>
+  return <button type="button" onClick={onClick} className="group flex items-start gap-4 rounded-xl border border-border p-4 text-left transition-colors hover:border-primary/40 hover:bg-primary/5"><div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted text-primary transition-colors group-hover:bg-primary/10"><Icon /></div><div><p className="font-normal">{title}</p><p className="mt-1 text-sm leading-relaxed text-muted-foreground">{copy}</p></div></button>
 }
 
 function ComingSoon({ section }: { section: Exclude<AdminSection, "overview" | "gallery"> }) {
   const content = comingSoon[section]
-  return <Card className="mx-auto max-w-2xl"><CardContent className="flex flex-col items-center p-10 text-center sm:p-16"><div className="flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-primary"><Sparkles /></div><h2 className="mt-6 font-display text-4xl">{content.title}</h2><p className="mt-4 max-w-lg leading-relaxed text-muted-foreground">{content.copy}</p><Badge className="mt-6" variant="outline">Próximamente</Badge></CardContent></Card>
+  return <Card className="mx-auto max-w-2xl"><CardContent className="flex flex-col items-center p-10 text-center sm:p-16"><div className="flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-primary"><Sparkles /></div><h2 className="mt-6 font-display text-3xl font-normal">{content.title}</h2><p className="mt-4 max-w-lg leading-relaxed text-muted-foreground">{content.copy}</p><Badge className="mt-6" variant="outline">Próximamente</Badge></CardContent></Card>
 }
