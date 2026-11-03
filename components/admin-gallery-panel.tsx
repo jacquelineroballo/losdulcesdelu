@@ -4,9 +4,10 @@ import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react"
 import {
   type GalleryItem,
   initialGalleryItems,
-  readGalleryItems,
-  saveGalleryItems,
+  loadGalleryItems,
+  persistGalleryItems,
   subscribeToGalleryItems,
+  uploadGalleryImage,
 } from "@/lib/gallery-storage"
 import { ImagePlus, Pencil, Plus, Search, Trash2, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -20,7 +21,7 @@ export function AdminGalleryPanel() {
   const [editingId, setEditingId] = useState<number | null>(null)
 
   useEffect(() => {
-    const syncItems = () => setItems(readGalleryItems())
+    const syncItems = () => { void loadGalleryItems().then(setItems) }
     syncItems()
     return subscribeToGalleryItems(syncItems)
   }, [])
@@ -42,20 +43,18 @@ export function AdminGalleryPanel() {
     setForm({ title: item.title, description: item.description, category: item.category, imageUrl: item.imageUrl, price: item.price })
   }
 
-  function handleImageUpload(event: ChangeEvent<HTMLInputElement>) {
+  async function handleImageUpload(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
     if (!file) return
-
-    const reader = new FileReader()
-    reader.onload = () => {
-      if (typeof reader.result === "string") {
-        setForm((current) => ({ ...current, imageUrl: reader.result as string }))
-      }
+    try {
+      const imageUrl = await uploadGalleryImage(file)
+      setForm((current) => ({ ...current, imageUrl }))
+    } catch (error) {
+      window.alert(error instanceof Error ? error.message : "No se pudo subir la imagen")
     }
-    reader.readAsDataURL(file)
   }
 
-  function saveItem(event: FormEvent<HTMLFormElement>) {
+  async function saveItem(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (!form.title.trim() || !form.imageUrl.trim()) return
 
@@ -63,16 +62,24 @@ export function AdminGalleryPanel() {
       ? [...items, { ...form, id: Date.now() }]
       : items.map((item) => item.id === editingId ? { ...item, ...form } : item)
 
-    setItems(nextItems)
-    saveGalleryItems(nextItems)
-    startNew()
+    try {
+      await persistGalleryItems(nextItems)
+      setItems(nextItems)
+      startNew()
+    } catch (error) {
+      window.alert(error instanceof Error ? error.message : "No se pudo guardar la galería")
+    }
   }
 
-  function deleteItem(id: number) {
+  async function deleteItem(id: number) {
     const nextItems = items.filter((item) => item.id !== id)
-    setItems(nextItems)
-    saveGalleryItems(nextItems)
-    if (editingId === id) startNew()
+    try {
+      await persistGalleryItems(nextItems)
+      setItems(nextItems)
+      if (editingId === id) startNew()
+    } catch (error) {
+      window.alert(error instanceof Error ? error.message : "No se pudo eliminar el producto")
+    }
   }
 
   return (

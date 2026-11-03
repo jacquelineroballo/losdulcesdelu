@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import {
 	initialGalleryItems,
-	readGalleryItems,
+	loadGalleryItems,
 	subscribeToGalleryItems,
 	type GalleryItem,
 } from '@/lib/gallery-storage'
@@ -35,7 +35,7 @@ export default function GalleryPage() {
 	const [filter, setFilter] = useState('all')
 
 	useEffect(() => {
-		const syncItems = () => setGalleryItems(readGalleryItems())
+		const syncItems = () => { void loadGalleryItems().then(setGalleryItems) }
 		syncItems()
 		return subscribeToGalleryItems(syncItems)
 	}, [])
