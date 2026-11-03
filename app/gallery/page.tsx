@@ -56,10 +56,9 @@ export default function GalleryPage() {
 		},
 		{
 			id: 4,
-			title: '',
-			description: '',
+			title: 'Postre de Pascuas',
+			description: 'Postre especial de Pascuas con decoración temática y relleno a elección',
 			category: 'desserts',
-
 			imageUrl: '/gallery/postre-pascuas.png',
 			price: '$20.000',
 		},
