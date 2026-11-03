@@ -2,10 +2,8 @@
 
 import { useState } from "react"
 import {
-  BarChart3,
   CakeSlice,
   ChevronRight,
-  ClipboardList,
   ImageIcon,
   LayoutDashboard,
   Mail,
@@ -99,7 +97,7 @@ export function AdminDashboard() {
 
         <main className="min-w-0 flex-1">
           <header className="flex min-h-20 items-center justify-between gap-4 border-b border-border bg-card px-4 sm:px-8">
-            <div className="flex items-center gap-3"><Button variant="ghost" size="icon" className="md:hidden" onClick={() => setSidebarOpen(true)} aria-label="Abrir menú"><Menu /></Button><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Panel de administración</p><h1 className="mt-1 text-xl font-semibold sm:text-2xl">{activeItem.label}</h1></div></div>
+            <div className="flex items-center gap-3"><Button variant="ghost" size="icon" className="md:hidden" onClick={() => setSidebarOpen(true)} aria-label="Abrir menú"><Menu /></Button><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Panel de administración</p><h1 className="mt-1 font-display text-3xl leading-none sm:text-4xl">{activeItem.label}</h1></div></div>
             <Badge variant="secondary" className="hidden gap-2 sm:flex"><span className="size-2 rounded-full bg-emerald-500" /> Guardado permanente activo</Badge>
           </header>
 
@@ -118,14 +116,9 @@ export function AdminDashboard() {
 
 function Overview({ onOpenGallery, onOpenHome }: { onOpenGallery: () => void; onOpenHome: () => void }) {
   return <div className="flex flex-col gap-8">
-    <div className="max-w-2xl"><p className="text-sm text-muted-foreground">Bienvenida al centro de gestión de tu pastelería.</p><h2 className="mt-2 font-display text-4xl leading-tight sm:text-5xl">Todo tu contenido, en un solo lugar.</h2><p className="mt-4 leading-relaxed text-muted-foreground">Desde acá vas a poder mantener actualizados tus productos, imágenes y la información de cada página pública.</p></div>
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><MetricCard icon={ImageIcon} label="Galería" value="Activa" detail="Productos administrables" /><MetricCard icon={BarChart3} label="Páginas" value="3 / 4" detail="Módulos disponibles" /><MetricCard icon={ClipboardList} label="Contenido" value="En progreso" detail="Migración por etapas" /><MetricCard icon={Sparkles} label="Persistencia" value="Blob" detail="Guardado permanente" /></div>
-    <Card className="overflow-hidden"><CardHeader className="flex-row items-center justify-between gap-4"><div><CardTitle>Accesos rápidos</CardTitle><p className="mt-1 text-sm text-muted-foreground">Empezá por el módulo que querés actualizar.</p></div><Button onClick={onOpenGallery}>Abrir galería <ChevronRight data-icon="inline-end" /></Button></CardHeader><Separator /><CardContent className="grid gap-3 p-4 sm:grid-cols-2"><QuickAction icon={ImageIcon} title="Gestionar galería" copy="Agregá, editá o quitá productos e imágenes." onClick={onOpenGallery} /><QuickAction icon={CakeSlice} title="Gestionar imágenes de inicio" copy="Elegí, subí o reemplazá la imagen principal." onClick={onOpenHome} /></CardContent></Card>
+    <div className="max-w-3xl"><p className="text-sm font-medium text-primary">Bienvenida al centro de gestión</p><h2 className="mt-2 font-display text-4xl leading-tight sm:text-6xl">Todo tu contenido, en un solo lugar.</h2><p className="mt-4 max-w-2xl leading-relaxed text-muted-foreground">Gestioná productos e imágenes de tu pastelería desde un único lugar.</p></div>
+    <Card className="overflow-hidden"><CardHeader className="flex-row items-center justify-between gap-4"><div><CardTitle className="font-display text-3xl">Accesos rápidos</CardTitle><p className="mt-1 text-sm text-muted-foreground">Elegí qué querés actualizar.</p></div><Button onClick={onOpenGallery}>Abrir galería <ChevronRight data-icon="inline-end" /></Button></CardHeader><Separator /><CardContent className="grid gap-3 p-4 sm:grid-cols-2"><QuickAction icon={ImageIcon} title="Gestionar galería" copy="Agregá, editá o quitá productos e imágenes." onClick={onOpenGallery} /><QuickAction icon={CakeSlice} title="Gestionar imágenes de inicio" copy="Elegí, subí o reemplazá la imagen principal." onClick={onOpenHome} /></CardContent></Card>
   </div>
-}
-
-function MetricCard({ icon: Icon, label, value, detail }: { icon: typeof ImageIcon; label: string; value: string; detail: string }) {
-  return <Card><CardContent className="flex items-start gap-4 p-5"><div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary"><Icon /></div><div className="min-w-0"><p className="text-sm text-muted-foreground">{label}</p><p className="mt-1 text-xl font-semibold">{value}</p><p className="mt-1 truncate text-xs text-muted-foreground">{detail}</p></div></CardContent></Card>
 }
 
 function QuickAction({ icon: Icon, title, copy, onClick, disabled = false }: { icon: typeof ImageIcon; title: string; copy: string; onClick?: () => void; disabled?: boolean }) {
