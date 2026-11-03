@@ -1,7 +1,9 @@
 'use client'
 
 import { useRef, useState } from 'react'
+import useSWR from 'swr'
 import Image from 'next/image'
+import { initialHomeContent, type HomeContent } from '@/lib/home-content'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -490,24 +492,14 @@ const MixerIcon = ({ className }: { className?: string }) => (
 	</svg>
 )
 
+const homeFetcher = (url: string) => fetch(url).then((response) => response.json())
+
 export default function Home() {
-	const [slideIndex, setSlideIndex] = useState(0)
+		const { data: homeContent = initialHomeContent } = useSWR<HomeContent>('/api/site/home', homeFetcher, { fallbackData: initialHomeContent })
+		const [slideIndex, setSlideIndex] = useState(0)
 	const heroRef = useRef(null)
 
-	const testimonials = [
-		{
-			text: 'Increíble sabor y diseño. Todos en la fiesta quedaron encantados con la torta.',
-			author: 'María López',
-		},
-		{
-			text: 'Su atención es excelente y los detalles en las tortas son impresionantes.',
-			author: 'Carlos Gómez',
-		},
-		{
-			text: 'Siempre pido mis pasteles aquí. Nunca me han decepcionado.',
-			author: 'Ana Martínez',
-		},
-	]
+		const testimonials = homeContent.testimonials
 
 	const { scrollYProgress } = useScroll()
 	const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0])
@@ -561,7 +553,7 @@ export default function Home() {
 								animate={{ opacity: 1, x: 0 }}
 								transition={{ duration: 0.5 }}
 							>
-								<span className='gradient-text font-bold'>Pastelería Artesanal</span>
+								<span className='gradient-text font-bold'>{homeContent.eyebrow}</span>
 							</motion.div>
 
 							<motion.h1
@@ -570,9 +562,8 @@ export default function Home() {
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ duration: 0.5, delay: 0.2 }}
 							>
-								Delicias{' '}
-								<span className='font-display gradient-text sparkle p-1'>Personalizadas</span> para
-								cada ocasión
+{homeContent.heroTitle}{' '}
+									<span className='font-display gradient-text sparkle p-1'>{homeContent.heroHighlight}</span>
 							</motion.h1>
 
 							<motion.p
