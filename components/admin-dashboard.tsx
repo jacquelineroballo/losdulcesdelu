@@ -3,7 +3,6 @@
 import { useState } from "react"
 import {
   CakeSlice,
-  ChevronRight,
   ImageIcon,
   LayoutDashboard,
   Mail,
@@ -100,7 +99,7 @@ export function AdminDashboard() {
           </header>
 
           <div className="p-4 sm:p-8">
-            {activeSection === "overview" && <Overview onOpenGallery={() => setActiveSection("gallery")} onOpenHome={() => setActiveSection("home")} />}
+            {activeSection === "overview" && <Overview onNavigate={setActiveSection} />}
             {activeSection === "gallery" && <AdminGalleryPanel />}
             {activeSection === "home" && <AdminHomeImagesPanel />}
             {activeSection === "about" && <AdminAboutContentPanel />}
@@ -112,15 +111,18 @@ export function AdminDashboard() {
   )
 }
 
-function Overview({ onOpenGallery, onOpenHome }: { onOpenGallery: () => void; onOpenHome: () => void }) {
+function Overview({ onNavigate }: { onNavigate: (section: AdminSection) => void }) {
+  const pages = [
+    { id: "home" as const, label: "Inicio", icon: CakeSlice, description: "Imágenes principales" },
+    { id: "gallery" as const, label: "Galería", icon: ImageIcon, description: "Productos e imágenes" },
+    { id: "about" as const, label: "Sobre nosotros", icon: Users, description: "Equipo e historia" },
+    { id: "contact" as const, label: "Contacto", icon: Mail, description: "Datos y horarios" },
+  ]
+
   return <div className="flex flex-col gap-8">
     <div className="max-w-3xl"><p className="text-sm text-primary">Centro de gestión</p><h2 className="mt-2 font-display text-3xl font-normal leading-tight sm:text-4xl">Gestioná tu pastelería.</h2></div>
-    <Card className="overflow-hidden"><CardHeader className="flex-row items-center justify-between gap-4"><div><CardTitle className="font-display text-2xl font-normal">Acciones rápidas</CardTitle><p className="mt-1 text-sm text-muted-foreground">Elegí una sección para empezar.</p></div><Button onClick={onOpenGallery}>Abrir galería <ChevronRight data-icon="inline-end" /></Button></CardHeader><Separator /><CardContent className="grid gap-3 p-4 sm:grid-cols-2"><QuickAction icon={ImageIcon} title="Gestionar galería" copy="Agregá, editá o quitá productos e imágenes." onClick={onOpenGallery} /><QuickAction icon={CakeSlice} title="Imágenes de inicio" copy="Elegí, subí o reemplazá imágenes del inicio." onClick={onOpenHome} /></CardContent></Card>
+    <Card className="overflow-hidden"><CardHeader><CardTitle className="font-display text-2xl font-normal">Páginas</CardTitle></CardHeader><Separator /><CardContent className="grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-4">{pages.map(({ id, label, icon: Icon, description }) => <button key={id} type="button" onClick={() => onNavigate(id)} className="group flex min-h-32 flex-col justify-between rounded-xl border border-border p-4 text-left transition-colors hover:border-primary/40 hover:bg-primary/5"><span className="flex size-10 items-center justify-center rounded-xl bg-muted text-primary transition-colors group-hover:bg-primary/10"><Icon /></span><span><span className="block font-normal">{label}</span><span className="mt-1 block text-sm text-muted-foreground">{description}</span></span></button>)}</CardContent></Card>
   </div>
-}
-
-function QuickAction({ icon: Icon, title, copy, onClick }: { icon: typeof ImageIcon; title: string; copy: string; onClick: () => void }) {
-  return <button type="button" onClick={onClick} className="group flex items-start gap-4 rounded-xl border border-border p-4 text-left transition-colors hover:border-primary/40 hover:bg-primary/5"><div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted text-primary transition-colors group-hover:bg-primary/10"><Icon /></div><div><p className="font-normal">{title}</p><p className="mt-1 text-sm leading-relaxed text-muted-foreground">{copy}</p></div></button>
 }
 
 function ComingSoon({ section }: { section: Exclude<AdminSection, "overview" | "gallery"> }) {
