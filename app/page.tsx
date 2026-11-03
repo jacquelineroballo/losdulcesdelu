@@ -1,8 +1,8 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import useSWR from 'swr'
 import Image from 'next/image'
+import useSWR from 'swr'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -11,9 +11,9 @@ import { StarIcon, ChevronRight, ChevronLeft, Heart } from 'lucide-react'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { Card3D } from '@/components/3d-card'
 import { FadeIn, StaggerChildren, StaggerItem } from '@/components/scroll-animations'
-import { defaultHomeContent, type HomeContent } from '@/lib/home-content'
+import { defaultSiteImages, type SiteImages } from '@/lib/site-images'
 
-const homeContentFetcher = (url: string) => fetch(url, { cache: 'no-store' }).then((response) => response.json() as Promise<HomeContent>)
+const siteImagesFetcher = (url: string) => fetch(url, { cache: 'no-store' }).then((response) => response.json() as Promise<SiteImages>)
 
 const CustomCakeIcon = ({ className }: { className?: string }) => (
 	<svg
@@ -495,7 +495,7 @@ const MixerIcon = ({ className }: { className?: string }) => (
 )
 
 	export default function Home() {
-		const { data: homeContent = defaultHomeContent } = useSWR<HomeContent>('/api/home', homeContentFetcher, { fallbackData: defaultHomeContent })
+		const { data: siteImages = defaultSiteImages } = useSWR<SiteImages>('/api/site-images', siteImagesFetcher, { fallbackData: defaultSiteImages })
 		const [slideIndex, setSlideIndex] = useState(0)
 	const heroRef = useRef(null)
 
@@ -566,7 +566,7 @@ const MixerIcon = ({ className }: { className?: string }) => (
 								animate={{ opacity: 1, x: 0 }}
 								transition={{ duration: 0.5 }}
 							>
-								<span className='gradient-text font-bold'>{homeContent.heroBadge}</span>
+								<span className='gradient-text font-bold'>Pastelería Artesanal</span>
 							</motion.div>
 
 							<motion.h1
@@ -575,8 +575,9 @@ const MixerIcon = ({ className }: { className?: string }) => (
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ duration: 0.5, delay: 0.2 }}
 							>
-{homeContent.heroTitle}{' '}
-									<span className='font-display gradient-text sparkle p-1'>{homeContent.heroHighlight}</span>
+Delicias{' '}
+									<span className='font-display gradient-text sparkle p-1'>Personalizadas</span> para
+									cada ocasión
 							</motion.h1>
 
 							<motion.p
@@ -585,7 +586,8 @@ const MixerIcon = ({ className }: { className?: string }) => (
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ duration: 0.5, delay: 0.4 }}
 							>
-{homeContent.heroDescription}{' '}
+Transformamos ingredientes simples en obras de arte comestibles. Siempre con ese
+									sabor único que te hace sentir en casa.{' '}
 								<Heart className='inline animate-pulse text-red-400 w-4 h-4' />
 							</motion.p>
 
@@ -596,14 +598,14 @@ const MixerIcon = ({ className }: { className?: string }) => (
 								transition={{ duration: 0.5, delay: 0.6 }}
 							>
 								<Button asChild size='default' className='font-medium btn-fancy text-sm'>
-									<Link href='/gallery'>{homeContent.primaryCta}</Link>
+									<Link href='/gallery'>Ver Galería</Link>
 								</Button>
 								<Button
 									variant='outline'
 									size='default'
 									className='font-medium border-animated text-sm'
 								>
-									<Link href='/contact'>{homeContent.secondaryCta}</Link>
+									<Link href='/contact'>Contactar</Link>
 								</Button>
 							</motion.div>
 						</div>
@@ -617,7 +619,7 @@ const MixerIcon = ({ className }: { className?: string }) => (
 							<Card3D className='w-full'>
 								<div className='relative w-full h-[300px] md:h-[350px] lg:h-[400px] rounded-xl overflow-hidden'>
 									<Image
-										src='/gallery/hero.png'
+										src={siteImages.homeHero}
 										alt='Tortas de cumpleaños personalizadas'
 										fill
 										className='object-cover'
@@ -660,10 +662,11 @@ const MixerIcon = ({ className }: { className?: string }) => (
 					<FadeIn>
 						<div className='grid gap-6 text-center max-w-3xl mx-auto mb-16'>
 							<h2 className='text-4xl font-bold tracking-tighter md:text-5xl/tight gradient-text'>
-{homeContent.whyTitle}
+Por qué elegirnos
 							</h2>
 							<p className='text-xl text-muted-foreground'>
-{homeContent.whyDescription}
+En Los dulces de Lu, cada creación es única y especial, hecha con amor e
+									ingredientes de calidad
 							</p>
 						</div>
 					</FadeIn>
@@ -722,10 +725,10 @@ const MixerIcon = ({ className }: { className?: string }) => (
 					<FadeIn>
 						<div className='grid gap-6 text-center max-w-3xl mx-auto mb-16'>
 							<h2 className='text-4xl font-bold tracking-tighter md:text-5xl/tight gradient-text'>
-{homeContent.specialtiesTitle}
+Nuestras Especialidades
 							</h2>
 							<p className='text-xl text-muted-foreground'>
-								{homeContent.specialtiesDescription}
+								Descubre nuestra variedad de creaciones para cada momento especial
 							</p>
 						</div>
 					</FadeIn>
@@ -800,7 +803,7 @@ const MixerIcon = ({ className }: { className?: string }) => (
 						<FadeIn direction='left'>
 							<div className='space-y-4'>
 								<h2 className='text-4xl font-bold tracking-tighter md:text-5xl/tight gradient-text'>
-									{homeContent.testimonialsTitle}
+									Testimonios de Clientes Satisfechos
 								</h2>
 								<div className='relative overflow-hidden py-8'>
 									<div className='relative flex items-center'>
@@ -894,10 +897,11 @@ const MixerIcon = ({ className }: { className?: string }) => (
 						<FadeIn direction='left'>
 							<div className='space-y-4'>
 								<h2 className='text-4xl font-bold tracking-tighter md:text-5xl/tight gradient-text'>
-									{homeContent.newsletterTitle}
+									¿Listos para probar la magia?
 								</h2>
 								<p className='text-xl text-muted-foreground'>
-{homeContent.newsletterDescription}
+Da el primer paso hacia la satisfacción dulce: realiza tu pedido o suscríbete a
+											nuestro boletín para recibir actualizaciones y promociones.
 								</p>
 							</div>
 						</FadeIn>
