@@ -1,7 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
-import useSWR from "swr"
+import { useState } from "react"
 import {
   CakeSlice,
   ChevronRight,
@@ -18,10 +17,6 @@ import {
 import { AdminGalleryPanel } from "@/components/admin-gallery-panel"
 import { AdminHomeImagesPanel } from "@/components/admin-home-images-panel"
 import { AdminAboutContentPanel } from "@/components/admin-about-content-panel"
-import { initialGalleryItems, type GalleryItem } from "@/lib/gallery-storage"
-
-const galleryFetcher = (url: string) => fetch(url, { cache: "no-store" }).then((response) => response.json() as Promise<GalleryItem[]>)
-const categoryName = (category: string) => category.replace(/[-_]/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase())
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -118,12 +113,9 @@ export function AdminDashboard() {
 }
 
 function Overview({ onOpenGallery, onOpenHome }: { onOpenGallery: () => void; onOpenHome: () => void }) {
-  const { data: galleryItems = initialGalleryItems } = useSWR<GalleryItem[]>("/api/gallery", galleryFetcher, { fallbackData: initialGalleryItems })
-  const categories = useMemo(() => Array.from(new Set(galleryItems.map((item) => item.category).filter(Boolean))).sort(), [galleryItems])
-
   return <div className="flex flex-col gap-8">
     <div className="max-w-3xl"><p className="text-sm text-primary">Centro de gestión</p><h2 className="mt-2 font-display text-3xl font-normal leading-tight sm:text-4xl">Gestioná tu pastelería.</h2></div>
-    <Card className="overflow-hidden"><CardHeader className="flex-row items-center justify-between gap-4"><div><CardTitle className="font-display text-2xl font-normal">Acciones rápidas</CardTitle><p className="mt-1 text-sm text-muted-foreground">Elegí una sección para empezar.</p></div><Button onClick={onOpenGallery}>Abrir galería <ChevronRight data-icon="inline-end" /></Button></CardHeader><Separator /><CardContent className="grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3"><QuickAction icon={ImageIcon} title="Gestionar galería" copy="Agregá, editá o quitá productos e imágenes." onClick={onOpenGallery} /><QuickAction icon={CakeSlice} title="Imágenes de inicio" copy="Elegí, subí o reemplazá imágenes del inicio." onClick={onOpenHome} />{categories.map((category) => <QuickAction key={category} icon={ImageIcon} title={categoryName(category)} copy="Gestionar productos de esta categoría." onClick={onOpenGallery} />)}</CardContent></Card>
+    <Card className="overflow-hidden"><CardHeader className="flex-row items-center justify-between gap-4"><div><CardTitle className="font-display text-2xl font-normal">Acciones rápidas</CardTitle><p className="mt-1 text-sm text-muted-foreground">Elegí una sección para empezar.</p></div><Button onClick={onOpenGallery}>Abrir galería <ChevronRight data-icon="inline-end" /></Button></CardHeader><Separator /><CardContent className="grid gap-3 p-4 sm:grid-cols-2"><QuickAction icon={ImageIcon} title="Gestionar galería" copy="Agregá, editá o quitá productos e imágenes." onClick={onOpenGallery} /><QuickAction icon={CakeSlice} title="Imágenes de inicio" copy="Elegí, subí o reemplazá imágenes del inicio." onClick={onOpenHome} /></CardContent></Card>
   </div>
 }
 
