@@ -92,13 +92,11 @@ export function AdminDashboard() {
             </nav>
           </div>
 
-          <div className="border-t border-border p-4"><div className="rounded-xl bg-muted/70 p-4"><div className="flex items-center gap-2 text-sm font-medium"><Sparkles /> Próxima etapa</div><p className="mt-2 text-xs leading-relaxed text-muted-foreground">Vamos a sumar editores para cada página pública, uno por uno.</p></div></div>
         </aside>
 
         <main className="min-w-0 flex-1">
           <header className="flex min-h-20 items-center justify-between gap-4 border-b border-border bg-card px-4 sm:px-8">
             <div className="flex items-center gap-3"><Button variant="ghost" size="icon" className="md:hidden" onClick={() => setSidebarOpen(true)} aria-label="Abrir menú"><Menu /></Button><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Panel de administración</p><h1 className="mt-1 font-display text-3xl leading-none sm:text-4xl">{activeItem.label}</h1></div></div>
-            <Badge variant="secondary" className="hidden gap-2 sm:flex"><span className="size-2 rounded-full bg-emerald-500" /> Guardado permanente activo</Badge>
           </header>
 
           <div className="p-4 sm:p-8">
@@ -116,13 +114,13 @@ export function AdminDashboard() {
 
 function Overview({ onOpenGallery, onOpenHome }: { onOpenGallery: () => void; onOpenHome: () => void }) {
   return <div className="flex flex-col gap-8">
-    <div className="max-w-3xl"><p className="text-sm font-medium text-primary">Bienvenida al centro de gestión</p><h2 className="mt-2 font-display text-4xl leading-tight sm:text-6xl">Todo tu contenido, en un solo lugar.</h2><p className="mt-4 max-w-2xl leading-relaxed text-muted-foreground">Gestioná productos e imágenes de tu pastelería desde un único lugar.</p></div>
-    <Card className="overflow-hidden"><CardHeader className="flex-row items-center justify-between gap-4"><div><CardTitle className="font-display text-3xl">Accesos rápidos</CardTitle><p className="mt-1 text-sm text-muted-foreground">Elegí qué querés actualizar.</p></div><Button onClick={onOpenGallery}>Abrir galería <ChevronRight data-icon="inline-end" /></Button></CardHeader><Separator /><CardContent className="grid gap-3 p-4 sm:grid-cols-2"><QuickAction icon={ImageIcon} title="Gestionar galería" copy="Agregá, editá o quitá productos e imágenes." onClick={onOpenGallery} /><QuickAction icon={CakeSlice} title="Gestionar imágenes de inicio" copy="Elegí, subí o reemplazá la imagen principal." onClick={onOpenHome} /></CardContent></Card>
+    <div className="max-w-3xl"><p className="text-sm font-medium text-primary">Centro de gestión</p><h2 className="mt-2 font-display text-4xl leading-tight sm:text-6xl">Gestioná tu pastelería.</h2></div>
+    <Card className="overflow-hidden"><CardHeader className="flex-row items-center justify-between gap-4"><div><CardTitle className="font-display text-3xl">Acciones rápidas</CardTitle><p className="mt-1 text-sm text-muted-foreground">Elegí una sección para empezar.</p></div><Button onClick={onOpenGallery}>Abrir galería <ChevronRight data-icon="inline-end" /></Button></CardHeader><Separator /><CardContent className="grid gap-3 p-4 sm:grid-cols-2"><QuickAction icon={ImageIcon} title="Gestionar galería" copy="Agregá, editá o quitá productos e imágenes." onClick={onOpenGallery} /><QuickAction icon={CakeSlice} title="Imágenes de inicio" copy="Elegí, subí o reemplazá imágenes del inicio." onClick={onOpenHome} /></CardContent></Card>
   </div>
 }
 
-function QuickAction({ icon: Icon, title, copy, onClick, disabled = false }: { icon: typeof ImageIcon; title: string; copy: string; onClick?: () => void; disabled?: boolean }) {
-  return <button type="button" disabled={disabled} onClick={onClick} className={cn("flex items-start gap-4 rounded-xl border border-border p-4 text-left transition-colors", disabled ? "cursor-not-allowed opacity-50" : "hover:bg-muted")}><div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted"><Icon /></div><div><p className="font-medium">{title}</p><p className="mt-1 text-sm leading-relaxed text-muted-foreground">{copy}</p></div></button>
+function QuickAction({ icon: Icon, title, copy, onClick }: { icon: typeof ImageIcon; title: string; copy: string; onClick: () => void }) {
+  return <button type="button" onClick={onClick} className="group flex items-start gap-4 rounded-xl border border-border p-4 text-left transition-colors hover:border-primary/40 hover:bg-primary/5"><div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted text-primary transition-colors group-hover:bg-primary/10"><Icon /></div><div><p className="font-medium">{title}</p><p className="mt-1 text-sm leading-relaxed text-muted-foreground">{copy}</p></div></button>
 }
 
 function ComingSoon({ section }: { section: Exclude<AdminSection, "overview" | "gallery"> }) {
