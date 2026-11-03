@@ -1,6 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import {
+	initialGalleryItems,
+	readGalleryItems,
+	subscribeToGalleryItems,
+	type GalleryItem,
+} from '@/lib/gallery-storage'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -24,8 +30,15 @@ interface CakeItem {
 }
 
 export default function GalleryPage() {
-	const [selectedImage, setSelectedImage] = useState<CakeItem | null>(null)
+	const [selectedImage, setSelectedImage] = useState<GalleryItem | null>(null)
+	const [galleryItems, setGalleryItems] = useState<GalleryItem[]>(initialGalleryItems)
 	const [filter, setFilter] = useState('all')
+
+	useEffect(() => {
+		const syncItems = () => setGalleryItems(readGalleryItems())
+		syncItems()
+		return subscribeToGalleryItems(syncItems)
+	}, [])
 
 	const cakeItems: CakeItem[] = [
 		{
@@ -113,7 +126,7 @@ export default function GalleryPage() {
 	]
 
 	const filteredItems =
-		filter === 'all' ? cakeItems : cakeItems.filter((item) => item.category === filter)
+		filter === 'all' ? galleryItems : galleryItems.filter((item) => item.category === filter)
 
 	const getCategoryName = (category: string) => {
 		const categories = {

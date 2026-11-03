@@ -1,32 +1,29 @@
 "use client"
 
-import { ChangeEvent, FormEvent, useMemo, useState } from "react"
+import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from "react"
+import {
+  type GalleryItem,
+  initialGalleryItems,
+  readGalleryItems,
+  saveGalleryItems,
+  subscribeToGalleryItems,
+} from "@/lib/gallery-storage"
 import { ImagePlus, Pencil, Plus, Search, Trash2, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 
-type GalleryItem = {
-  id: number
-  title: string
-  description: string
-  category: string
-  imageUrl: string
-  price: string
-}
-
-const initialItems: GalleryItem[] = [
-  { id: 1, title: "Torta Equina", description: "Diseño personalizado para celebrar un momento especial.", category: "Tortas", imageUrl: "/gallery/torta-equina.png", price: "$25.000" },
-  { id: 2, title: "Torta Casino", description: "Una torta temática con detalles hechos a mano.", category: "Tortas", imageUrl: "/gallery/torta-casino.png", price: "$28.000" },
-  { id: 3, title: "Torta Freefire", description: "Decoración colorida y personalizada para cumpleaños.", category: "Tortas", imageUrl: "/gallery/torta-freefire.png", price: "$30.000" },
-  { id: 4, title: "Postre de Pascuas", description: "Postre especial con decoración temática.", category: "Postres", imageUrl: "/gallery/postre-pascuas.png", price: "$20.000" },
-]
-
-const emptyForm = { title: "", description: "", category: "Tortas", imageUrl: "", price: "" }
+const emptyForm = { title: "", description: "", category: "customized", imageUrl: "", price: "" }
 
 export function AdminGalleryPanel() {
-  const [items, setItems] = useState<GalleryItem[]>(initialItems)
+  const [items, setItems] = useState<GalleryItem[]>(initialGalleryItems)
   const [editingId, setEditingId] = useState<number | null>(null)
+
+  useEffect(() => {
+    const syncItems = () => setItems(readGalleryItems())
+    syncItems()
+    return subscribeToGalleryItems(syncItems)
+  }, [])
   const [form, setForm] = useState(emptyForm)
   const [query, setQuery] = useState("")
 
@@ -48,23 +45,33 @@ export function AdminGalleryPanel() {
   function handleImageUpload(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0]
     if (!file) return
-    setForm((current) => ({ ...current, imageUrl: URL.createObjectURL(file) }))
+
+    const reader = new FileReader()
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        setForm((current) => ({ ...current, imageUrl: reader.result as string }))
+      }
+    }
+    reader.readAsDataURL(file)
   }
 
   function saveItem(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (!form.title.trim() || !form.imageUrl.trim()) return
 
-    if (editingId === null) {
-      setItems((current) => [...current, { ...form, id: Date.now() }])
-    } else {
-      setItems((current) => current.map((item) => item.id === editingId ? { ...item, ...form } : item))
-    }
+    const nextItems = editingId === null
+      ? [...items, { ...form, id: Date.now() }]
+      : items.map((item) => item.id === editingId ? { ...item, ...form } : item)
+
+    setItems(nextItems)
+    saveGalleryItems(nextItems)
     startNew()
   }
 
   function deleteItem(id: number) {
-    setItems((current) => current.filter((item) => item.id !== id))
+    const nextItems = items.filter((item) => item.id !== id)
+    setItems(nextItems)
+    saveGalleryItems(nextItems)
     if (editingId === id) startNew()
   }
 
