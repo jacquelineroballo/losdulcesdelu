@@ -16,6 +16,16 @@ import { Textarea } from "@/components/ui/textarea"
 
 const emptyForm = { title: "", description: "", category: "customized", imageUrl: "", price: "" }
 
+const categoryLabels: Record<string, string> = {
+  customized: "Temáticas",
+  desserts: "Postres",
+  birthday: "Cumpleaños",
+  cupcakes: "Cupcakes",
+  wedding: "Bodas y eventos",
+  candybar: "Candy Bar",
+  special: "Especiales",
+}
+
 export function AdminGalleryPanel() {
   const [items, setItems] = useState<GalleryItem[]>(initialGalleryItems)
   const [editingId, setEditingId] = useState<number | null>(null)
@@ -104,7 +114,7 @@ export function AdminGalleryPanel() {
               </div>
               <div className="space-y-3 p-4">
                 <div className="flex items-start justify-between gap-3">
-                  <div><p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{item.category}</p><h3 className="font-semibold text-foreground">{item.title}</h3></div>
+                  <div><p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{categoryLabels[item.category] ?? item.category}</p><h3 className="font-semibold text-foreground">{item.title}</h3></div>
                   <p className="font-semibold text-primary">{item.price || "Sin precio"}</p>
                 </div>
                 <p className="line-clamp-2 text-sm text-muted-foreground">{item.description || "Sin descripción"}</p>
@@ -131,7 +141,7 @@ export function AdminGalleryPanel() {
           </div>
           <Input required value={form.title} onChange={(event) => setForm((current) => ({ ...current, title: event.target.value }))} placeholder="Nombre del producto" aria-label="Nombre del producto" />
           <Textarea value={form.description} onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))} placeholder="Descripción" aria-label="Descripción" />
-          <div className="grid grid-cols-2 gap-3"><Input value={form.category} onChange={(event) => setForm((current) => ({ ...current, category: event.target.value }))} placeholder="Categoría" aria-label="Categoría" /><Input value={form.price} onChange={(event) => setForm((current) => ({ ...current, price: event.target.value }))} placeholder="Precio" aria-label="Precio" /></div>
+          <div className="grid grid-cols-2 gap-3"><select value={form.category} onChange={(event) => setForm((current) => ({ ...current, category: event.target.value }))} aria-label="Categoría" className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground"><option value="customized">Temáticas</option><option value="desserts">Postres</option><option value="birthday">Cumpleaños</option><option value="cupcakes">Cupcakes</option><option value="wedding">Bodas y eventos</option><option value="candybar">Candy Bar</option><option value="special">Especiales</option></select><Input value={form.price} onChange={(event) => setForm((current) => ({ ...current, price: event.target.value }))} placeholder="Precio" aria-label="Precio" /></div>
           <Button type="submit" className="w-full">{editingId === null ? "Agregar a la galería" : "Guardar cambios"}</Button>
         </form>
         <p className="mt-4 text-xs leading-relaxed text-muted-foreground">Modo provisorio: los cambios se mantienen mientras esta página permanezca abierta. Luego podemos conectarlo a Supabase para guardarlos permanentemente.</p>

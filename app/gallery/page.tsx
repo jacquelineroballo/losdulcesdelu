@@ -129,13 +129,16 @@ export default function GalleryPage() {
 		filter === 'all' ? galleryItems : galleryItems.filter((item) => item.category === filter)
 
 	const getCategoryName = (category: string) => {
-		const categories = {
-			all: 'Todos',
-			birthday: 'Cumpleaños',
-			customized: 'Temática',
-			desserts: 'Postre',
-			candybar: 'Candy Bar',
-		}
+			const categories = {
+				all: 'Todos',
+				birthday: 'Cumpleaños',
+				customized: 'Temáticas',
+				desserts: 'Postres',
+				cupcakes: 'Cupcakes',
+				wedding: 'Bodas y eventos',
+				candybar: 'Candy Bar',
+				special: 'Especiales',
+			}
 		return categories[category as keyof typeof categories] || category
 	}
 
@@ -186,7 +189,7 @@ export default function GalleryPage() {
 						transition={{ duration: 0.6, delay: 0.2 }}
 						className='flex flex-wrap justify-center gap-4 mb-12'
 					>
-						{['all', 'birthday', 'customized', 'desserts', 'candybar'].map((category) => (
+						{['all', 'birthday', 'customized', 'desserts', 'cupcakes', 'wedding', 'candybar', 'special'].map((category) => (
 							<Button
 								key={category}
 								variant={filter === category ? 'default' : 'outline'}
