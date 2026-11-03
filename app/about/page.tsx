@@ -26,12 +26,10 @@ export default function AboutPage() {
 	const scale = useTransform(scrollYProgress, [0, 1], [0.8, 1])
 	const opacity = useTransform(scrollYProgress, [0, 0.3], [0, 1])
 
-	const aboutImages: { src: string; alt: string }[] = [
-		{ src: '/gallery/torta-casino.png', alt: 'Torta temática Casino' },
-		{ src: '/gallery/torta-equina.png', alt: 'Torta temática Equina' },
-		{ src: '/gallery/postre-pascuas.png', alt: 'Postre de Pascuas' },
-		{ src: '/gallery/candybar-bautismo.png', alt: 'Candy bar de bautismo' },
-	]
+	const aboutImages = aboutManagedImages.historyImages.map((src, index) => ({
+		src,
+		alt: `Creación de pastelería ${index + 1}`,
+	}))
 	return (
 		<>
 			{/* Hero Section */}
@@ -208,25 +206,14 @@ src={aboutManagedImages.hero}
 					</FadeIn>
 
 					<StaggerChildren className='grid gap-8 sm:grid-cols-2'>
-						{[
-							{
-								name: 'Luciana Roballo',
-								role: 'Fundadora y Pastelera Principal',
-								bio: 'Con más de 15 años de experiencia, Luciana combina técnicas tradicionales con innovación. Artista con habilidades excepcionales para convertir ideas en creaciones visuales impresionantes.',
-							},
-							{
-								name: 'Cristian Pilla',
-								role: 'Administrador',
-								bio: 'Se encarga de la gestión y entrega de pedidos de los clientes. Es la mano derecha de la fundadora, encargándose de brindar una experiencia excepcional a cada cliente.',
-							},
-						].map((member, index) => (
+						{aboutManagedImages.teamMembers.map((member, index) => (
 							<StaggerItem key={index} direction='up'>
 								<Card3D className='h-full'>
 									<Card className='overflow-hidden h-full glass-dark border-0'>
 										<CardContent className='p-8 text-center'>
 											<div className='relative h-40 w-40 mx-auto rounded-full overflow-hidden mb-6'>
 												<Image
-													src='/placeholder.svg?height=300&width=300'
+													src={member.image}
 													alt={member.name}
 													fill
 													className='object-cover'
@@ -368,34 +355,6 @@ src={aboutManagedImages.hero}
 								/>
 								<div className='absolute inset-0 bg-gradient-to-t from-black/50 to-transparent'></div>
 
-								<motion.div
-									className='absolute inset-0 flex items-center justify-center'
-									initial={{ opacity: 0 }}
-									whileInView={{ opacity: 1 }}
-									transition={{ duration: 0.5, delay: 0.4 }}
-									viewport={{ once: true }}
-								>
-									<motion.div
-										whileHover={{ scale: 1.1 }}
-										whileTap={{ scale: 0.9 }}
-										className='h-20 w-20 bg-primary/80 rounded-full flex items-center justify-center cursor-pointer'
-									>
-										<svg
-											xmlns='http://www.w3.org/2000/svg'
-											width='32'
-											height='32'
-											viewBox='0 0 24 24'
-											fill='none'
-											stroke='currentColor'
-											strokeWidth='2'
-											strokeLinecap='round'
-											strokeLinejoin='round'
-											className='text-white'
-										>
-											<polygon points='5 3 19 12 5 21 5 3' />
-										</svg>
-									</motion.div>
-								</motion.div>
 							</Card3D>
 						</FadeIn>
 					</div>

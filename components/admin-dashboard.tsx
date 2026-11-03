@@ -18,7 +18,7 @@ import {
 
 import { AdminGalleryPanel } from "@/components/admin-gallery-panel"
 import { AdminHomeImagesPanel } from "@/components/admin-home-images-panel"
-import { AdminAboutImagesPanel } from "@/components/admin-about-images-panel"
+import { AdminAboutContentPanel } from "@/components/admin-about-content-panel"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -107,7 +107,7 @@ export function AdminDashboard() {
             {activeSection === "overview" && <Overview onOpenGallery={() => setActiveSection("gallery")} onOpenHome={() => setActiveSection("home")} />}
             {activeSection === "gallery" && <AdminGalleryPanel />}
             {activeSection === "home" && <AdminHomeImagesPanel />}
-            {activeSection === "about" && <AdminAboutImagesPanel />}
+            {activeSection === "about" && <AdminAboutContentPanel />}
             {activeSection !== "overview" && activeSection !== "gallery" && activeSection !== "home" && activeSection !== "about" && <ComingSoon section={activeSection} />}
           </div>
         </main>
