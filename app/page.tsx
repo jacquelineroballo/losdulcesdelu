@@ -736,19 +736,19 @@ Nuestras Especialidades
 					<StaggerChildren className='grid gap-8 sm:grid-cols-2 lg:grid-cols-3 items-stretch'>
 						{[
 							{
-								title: 'Tortas de Cumpleaños',
-								description: 'Diseños personalizados para celebrar tu día especial',
-								image: '/placeholder.svg?height=400&width=400',
+title: 'Tortas de Cumpleaños',
+									description: 'Diseños personalizados para celebrar tu día especial',
+									image: siteImages.specialtyBirthday,
 							},
 							{
-								title: 'Cupcakes Decorados',
-								description: 'Pequeños bocados de felicidad decorados con creatividad',
-								image: '/placeholder.svg?height=400&width=400',
+title: 'Cupcakes Decorados',
+									description: 'Pequeños bocados de felicidad decorados con creatividad',
+									image: siteImages.specialtyCupcakes,
 							},
 							{
-								title: 'Postres Especiales',
-								description: 'Creaciones exclusivas para eventos y momentos inolvidables',
-								image: '/placeholder.svg?height=400&width=400',
+title: 'Postres Especiales',
+									description: 'Creaciones exclusivas para eventos y momentos inolvidables',
+									image: siteImages.specialtyDesserts,
 							},
 						].map((specialty, index) => (
 							<StaggerItem key={index} direction='up'>
