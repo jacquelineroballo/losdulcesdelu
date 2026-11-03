@@ -281,24 +281,14 @@ export default function GalleryPage() {
 																	<h4 className='font-semibold mb-3 text-lg'>
 																		✨ Características:
 																	</h4>
-																	<ul className='space-y-2'>
-																		<li className='flex items-center gap-3'>
-																			<span className='h-2 w-2 bg-primary rounded-full'></span>
-																			<span>Sabores personalizables</span>
-																		</li>
-																		<li className='flex items-center gap-3'>
-																			<span className='h-2 w-2 bg-primary rounded-full'></span>
-																			<span>Decoración artesanal</span>
-																		</li>
-																		<li className='flex items-center gap-3'>
-																			<span className='h-2 w-2 bg-primary rounded-full'></span>
-																			<span>Ingredientes premium</span>
-																		</li>
-																		<li className='flex items-center gap-3'>
-																			<span className='h-2 w-2 bg-primary rounded-full'></span>
-																			<span>Diseño personalizado</span>
-																		</li>
-																	</ul>
+<ul className='space-y-2'>
+																																								{item.features.map((feature) => (
+																																									<li key={feature} className='flex items-center gap-3'>
+																																												<span className='h-2 w-2 rounded-full bg-primary'></span>
+																																									<span>{feature}</span>
+																																									</li>
+																																									))}
+																																												</ul>
 																</div>
 															</div>
 														</div>

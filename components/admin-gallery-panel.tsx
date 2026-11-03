@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 
-const emptyForm = { title: "", description: "", category: "customized", imageUrl: "", price: "" }
+const emptyForm = { title: "", description: "", category: "customized", imageUrl: "", price: "", features: "" }
 
 const categoryLabels: Record<string, string> = {
   customized: "Temáticas",
@@ -53,7 +53,7 @@ export function AdminGalleryPanel() {
   function startEdit(item: GalleryItem) {
     setEditingId(item.id)
     setFormError("")
-    setForm({ title: item.title, description: item.description, category: item.category, imageUrl: item.imageUrl, price: item.price })
+    setForm({ title: item.title, description: item.description, category: item.category, imageUrl: item.imageUrl, price: item.price, features: item.features.join("\n") })
   }
 
   async function handleImageUpload(event: ChangeEvent<HTMLInputElement>) {
@@ -79,9 +79,10 @@ export function AdminGalleryPanel() {
       return
     }
 
+    const features = form.features.split("\n").map((feature) => feature.trim()).filter(Boolean)
     const nextItems = editingId === null
-      ? [...items, { ...form, id: Date.now() }]
-      : items.map((item) => item.id === editingId ? { ...item, ...form } : item)
+      ? [...items, { ...form, features, id: Date.now() }]
+      : items.map((item) => item.id === editingId ? { ...item, ...form, features } : item)
 
     try {
       await persistGalleryItems(nextItems)
@@ -152,6 +153,7 @@ export function AdminGalleryPanel() {
           </div>
           <Input value={form.title} onChange={(event) => setForm((current) => ({ ...current, title: event.target.value }))} placeholder="Nombre del producto" aria-label="Nombre del producto" />
           <Textarea value={form.description} onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))} placeholder="Descripción" aria-label="Descripción" />
+          <Textarea value={form.features} onChange={(event) => setForm((current) => ({ ...current, features: event.target.value }))} placeholder="Características, una por línea" aria-label="Características" />
           <div className="grid grid-cols-2 gap-3"><select value={form.category} onChange={(event) => setForm((current) => ({ ...current, category: event.target.value }))} aria-label="Categoría" className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground"><option value="customized">Temáticas</option><option value="desserts">Postres</option><option value="birthday">Cumpleaños</option><option value="cupcakes">Cupcakes</option><option value="wedding">Bodas y eventos</option><option value="candybar">Candy Bar</option><option value="special">Especiales</option></select><Input value={form.price} onChange={(event) => setForm((current) => ({ ...current, price: event.target.value }))} placeholder="Precio" aria-label="Precio" /></div>
           {formError && <p role="alert" className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">{formError}</p>}
           <Button type="submit" className="w-full">{editingId === null ? "Agregar a la galería" : "Guardar cambios"}</Button>

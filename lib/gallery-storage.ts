@@ -5,19 +5,24 @@ export type GalleryItem = {
   category: string
   imageUrl: string
   price: string
+  features: string[]
 }
 
 export const GALLERY_STORAGE_KEY = "los-dulces-de-lu-gallery"
 
 export const initialGalleryItems: GalleryItem[] = [
-  { id: 1, title: "Torta Equina", description: "Torta de chocolate con relleno de frambuesas frescas y ganache", category: "customized", imageUrl: "/gallery/torta-equina.png", price: "Cotizar" },
-  { id: 2, title: "Torta Casino", description: "Torta de casino con decoración de cartas y dados", category: "customized", imageUrl: "/gallery/torta-casino.png", price: "Cotizar" },
-  { id: 3, title: "Torta Freefire", description: "Torta temática del juego Freefire con relleno de crema oreo y dulce de leche", category: "customized", imageUrl: "/gallery/torta-freefire.png", price: "Cotizar" },
-  { id: 4, title: "Postre de Pascuas", description: "Postre especial de Pascuas con decoración temática y relleno a elección", category: "desserts", imageUrl: "/gallery/postre-pascuas.png", price: "$20.000" },
+  { id: 1, title: "Torta Equina", description: "Torta de chocolate con relleno de frambuesas frescas y ganache", category: "customized", imageUrl: "/gallery/torta-equina.png", price: "Cotizar", features: ["Sabores personalizables", "Decoración artesanal", "Ingredientes premium", "Diseño personalizado"] },
+  { id: 2, title: "Torta Casino", description: "Torta de casino con decoración de cartas y dados", category: "customized", imageUrl: "/gallery/torta-casino.png", price: "Cotizar", features: ["Sabores personalizables", "Decoración artesanal", "Ingredientes premium", "Diseño personalizado"] },
+  { id: 3, title: "Torta Freefire", description: "Torta temática del juego Freefire con relleno de crema oreo y dulce de leche", category: "customized", imageUrl: "/gallery/torta-freefire.png", price: "Cotizar", features: ["Sabores personalizables", "Decoración artesanal", "Ingredientes premium", "Diseño personalizado"] },
+  { id: 4, title: "Postre de Pascuas", description: "Postre especial de Pascuas con decoración temática y relleno a elección", category: "desserts", imageUrl: "/gallery/postre-pascuas.png", price: "$20.000", features: ["Sabores personalizables", "Decoración artesanal", "Ingredientes premium", "Diseño personalizado"] },
 ]
 
+const defaultFeatures = ["Sabores personalizables", "Decoración artesanal", "Ingredientes premium", "Diseño personalizado"]
+
 function validItems(items: GalleryItem[]) {
-  return items.filter((item) => item.title.trim() && item.imageUrl.trim())
+  return items
+    .filter((item) => item.title.trim() && item.imageUrl.trim())
+    .map((item) => ({ ...item, features: Array.isArray(item.features) && item.features.length > 0 ? item.features : defaultFeatures }))
 }
 
 export function readGalleryItems() {
