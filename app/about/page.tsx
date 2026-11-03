@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef } from 'react'
+import useSWR from 'swr'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -10,9 +11,13 @@ import { AnimatedBackground } from '@/components/animated-background'
 import { ParallaxSection } from '@/components/parallax-section'
 import { Card3D } from '@/components/3d-card'
 import { FadeIn, StaggerChildren, StaggerItem } from '@/components/scroll-animations'
+import { defaultAboutImages, type AboutImages } from '@/lib/about-images'
+
+const aboutImagesFetcher = (url: string) => fetch(url, { cache: 'no-store' }).then((response) => response.json() as Promise<AboutImages>)
 
 export default function AboutPage() {
-	const targetRef = useRef(null)
+		const { data: aboutManagedImages = defaultAboutImages } = useSWR<AboutImages>('/api/about-images', aboutImagesFetcher, { fallbackData: defaultAboutImages })
+		const targetRef = useRef(null)
 	const { scrollYProgress } = useScroll({
 		target: targetRef,
 		offset: ['start end', 'end start'],
@@ -74,8 +79,8 @@ export default function AboutPage() {
 						>
 							<Card3D className='relative aspect-video overflow-hidden rounded-lg'>
 								<Image
-									src='/placeholder.svg?height=600&width=800'
-									alt='Nuestro equipo de pastelería'
+src={aboutManagedImages.hero}
+																																				alt='Nuestro equipo de pastelería'
 									fill
 									className='object-cover'
 								/>
@@ -186,7 +191,7 @@ export default function AboutPage() {
 
 			{/* Nuestro Equipo */}
 			<ParallaxSection
-				bgImage='/placeholder.svg?height=1000&width=2000'
+				bgImage={aboutManagedImages.teamBackground}
 				className='py-20'
 				speed={0.3}
 			>
@@ -356,7 +361,7 @@ export default function AboutPage() {
 						<FadeIn direction='right' delay={0.2}>
 							<Card3D className='relative aspect-video overflow-hidden rounded-lg'>
 								<Image
-									src='/placeholder.svg?height=600&width=800'
+									src={aboutManagedImages.workshop}
 									alt='Nuestro taller de pastelería'
 									fill
 									className='object-cover'
