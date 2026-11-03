@@ -37,6 +37,7 @@ export function AdminGalleryPanel() {
   }, [])
   const [form, setForm] = useState(emptyForm)
   const [query, setQuery] = useState("")
+  const [formError, setFormError] = useState("")
 
   const filteredItems = useMemo(
     () => items.filter((item) => `${item.title} ${item.category}`.toLowerCase().includes(query.toLowerCase())),
@@ -46,10 +47,12 @@ export function AdminGalleryPanel() {
   function startNew() {
     setEditingId(null)
     setForm(emptyForm)
+    setFormError("")
   }
 
   function startEdit(item: GalleryItem) {
     setEditingId(item.id)
+    setFormError("")
     setForm({ title: item.title, description: item.description, category: item.category, imageUrl: item.imageUrl, price: item.price })
   }
 
@@ -66,7 +69,15 @@ export function AdminGalleryPanel() {
 
   async function saveItem(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    if (!form.title.trim() || !form.imageUrl.trim()) return
+    setFormError("")
+    if (!form.title.trim()) {
+      setFormError("Escribí el nombre del producto.")
+      return
+    }
+    if (!form.imageUrl.trim()) {
+      setFormError("Subí una imagen o pegá una URL antes de guardar.")
+      return
+    }
 
     const nextItems = editingId === null
       ? [...items, { ...form, id: Date.now() }]
@@ -139,12 +150,13 @@ export function AdminGalleryPanel() {
             <label className="cursor-pointer text-sm font-medium text-primary hover:underline">{form.imageUrl ? "Cambiar imagen" : "Subir imagen"}<input type="file" accept="image/*" onChange={handleImageUpload} className="sr-only" /></label>
             <Input value={form.imageUrl} onChange={(event) => setForm((current) => ({ ...current, imageUrl: event.target.value }))} placeholder="o pega una URL" className="mt-3" aria-label="URL de imagen" />
           </div>
-          <Input required value={form.title} onChange={(event) => setForm((current) => ({ ...current, title: event.target.value }))} placeholder="Nombre del producto" aria-label="Nombre del producto" />
+          <Input value={form.title} onChange={(event) => setForm((current) => ({ ...current, title: event.target.value }))} placeholder="Nombre del producto" aria-label="Nombre del producto" />
           <Textarea value={form.description} onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))} placeholder="Descripción" aria-label="Descripción" />
           <div className="grid grid-cols-2 gap-3"><select value={form.category} onChange={(event) => setForm((current) => ({ ...current, category: event.target.value }))} aria-label="Categoría" className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground"><option value="customized">Temáticas</option><option value="desserts">Postres</option><option value="birthday">Cumpleaños</option><option value="cupcakes">Cupcakes</option><option value="wedding">Bodas y eventos</option><option value="candybar">Candy Bar</option><option value="special">Especiales</option></select><Input value={form.price} onChange={(event) => setForm((current) => ({ ...current, price: event.target.value }))} placeholder="Precio" aria-label="Precio" /></div>
+          {formError && <p role="alert" className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">{formError}</p>}
           <Button type="submit" className="w-full">{editingId === null ? "Agregar a la galería" : "Guardar cambios"}</Button>
         </form>
-        <p className="mt-4 text-xs leading-relaxed text-muted-foreground">Modo provisorio: los cambios se mantienen mientras esta página permanezca abierta. Luego podemos conectarlo a Supabase para guardarlos permanentemente.</p>
+        <p className="mt-4 text-xs leading-relaxed text-muted-foreground">Los cambios se guardan permanentemente en la galería.</p>
       </aside>
     </div>
   )
