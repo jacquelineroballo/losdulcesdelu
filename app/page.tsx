@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
+import useSWR from 'swr'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -10,6 +11,9 @@ import { StarIcon, ChevronRight, ChevronLeft, Heart } from 'lucide-react'
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { Card3D } from '@/components/3d-card'
 import { FadeIn, StaggerChildren, StaggerItem } from '@/components/scroll-animations'
+import { defaultHomeContent, type HomeContent } from '@/lib/home-content'
+
+const homeContentFetcher = (url: string) => fetch(url, { cache: 'no-store' }).then((response) => response.json() as Promise<HomeContent>)
 
 const CustomCakeIcon = ({ className }: { className?: string }) => (
 	<svg
@@ -490,8 +494,9 @@ const MixerIcon = ({ className }: { className?: string }) => (
 	</svg>
 )
 
-export default function Home() {
-	const [slideIndex, setSlideIndex] = useState(0)
+	export default function Home() {
+		const { data: homeContent = defaultHomeContent } = useSWR<HomeContent>('/api/home', homeContentFetcher, { fallbackData: defaultHomeContent })
+		const [slideIndex, setSlideIndex] = useState(0)
 	const heroRef = useRef(null)
 
 	const testimonials = [
@@ -561,7 +566,7 @@ export default function Home() {
 								animate={{ opacity: 1, x: 0 }}
 								transition={{ duration: 0.5 }}
 							>
-								<span className='gradient-text font-bold'>Pastelería Artesanal</span>
+								<span className='gradient-text font-bold'>{homeContent.heroBadge}</span>
 							</motion.div>
 
 							<motion.h1
@@ -570,9 +575,8 @@ export default function Home() {
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ duration: 0.5, delay: 0.2 }}
 							>
-								Delicias{' '}
-								<span className='font-display gradient-text sparkle p-1'>Personalizadas</span> para
-								cada ocasión
+{homeContent.heroTitle}{' '}
+									<span className='font-display gradient-text sparkle p-1'>{homeContent.heroHighlight}</span>
 							</motion.h1>
 
 							<motion.p
@@ -581,8 +585,7 @@ export default function Home() {
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ duration: 0.5, delay: 0.4 }}
 							>
-								Transformamos ingredientes simples en obras de arte comestibles. Siempre con ese
-								sabor único que te hace sentir en casa.{' '}
+{homeContent.heroDescription}{' '}
 								<Heart className='inline animate-pulse text-red-400 w-4 h-4' />
 							</motion.p>
 
@@ -593,14 +596,14 @@ export default function Home() {
 								transition={{ duration: 0.5, delay: 0.6 }}
 							>
 								<Button asChild size='default' className='font-medium btn-fancy text-sm'>
-									<Link href='/gallery'>Ver Galería</Link>
+									<Link href='/gallery'>{homeContent.primaryCta}</Link>
 								</Button>
 								<Button
 									variant='outline'
 									size='default'
 									className='font-medium border-animated text-sm'
 								>
-									<Link href='/contact'>Contactar</Link>
+									<Link href='/contact'>{homeContent.secondaryCta}</Link>
 								</Button>
 							</motion.div>
 						</div>
@@ -657,11 +660,10 @@ export default function Home() {
 					<FadeIn>
 						<div className='grid gap-6 text-center max-w-3xl mx-auto mb-16'>
 							<h2 className='text-4xl font-bold tracking-tighter md:text-5xl/tight gradient-text'>
-								Por qué elegirnos
+{homeContent.whyTitle}
 							</h2>
 							<p className='text-xl text-muted-foreground'>
-								En Los dulces de Lu, cada creación es única y especial, hecha con amor e
-								ingredientes de calidad
+{homeContent.whyDescription}
 							</p>
 						</div>
 					</FadeIn>
@@ -720,10 +722,10 @@ export default function Home() {
 					<FadeIn>
 						<div className='grid gap-6 text-center max-w-3xl mx-auto mb-16'>
 							<h2 className='text-4xl font-bold tracking-tighter md:text-5xl/tight gradient-text'>
-								Nuestras Especialidades
+{homeContent.specialtiesTitle}
 							</h2>
 							<p className='text-xl text-muted-foreground'>
-								Descubre nuestra variedad de creaciones para cada momento especial
+								{homeContent.specialtiesDescription}
 							</p>
 						</div>
 					</FadeIn>
@@ -798,7 +800,7 @@ export default function Home() {
 						<FadeIn direction='left'>
 							<div className='space-y-4'>
 								<h2 className='text-4xl font-bold tracking-tighter md:text-5xl/tight gradient-text'>
-									Testimonios de Clientes Satisfechos
+									{homeContent.testimonialsTitle}
 								</h2>
 								<div className='relative overflow-hidden py-8'>
 									<div className='relative flex items-center'>
@@ -892,11 +894,10 @@ export default function Home() {
 						<FadeIn direction='left'>
 							<div className='space-y-4'>
 								<h2 className='text-4xl font-bold tracking-tighter md:text-5xl/tight gradient-text'>
-									¿Listos para probar la magia?
+									{homeContent.newsletterTitle}
 								</h2>
 								<p className='text-xl text-muted-foreground'>
-									Da el primer paso hacia la satisfacción dulce: realiza tu pedido o suscríbete a
-									nuestro boletín para recibir actualizaciones y promociones.
+{homeContent.newsletterDescription}
 								</p>
 							</div>
 						</FadeIn>
