@@ -527,15 +527,15 @@ export default function Home() {
 		const sprinkles = []
 		const colors = ['#FDA4AF', '#FB7185', '#F43F5E', '#E11D48', '#9F1239', '#FBBF24', '#34D399']
 
-		for (let i = 0; i < 50; i++) {
-			const style = {
-				top: `${Math.random() * 100}%`,
-				left: `${Math.random() * 100}%`,
-				backgroundColor: colors[Math.floor(Math.random() * colors.length)],
-				transform: `rotate(${Math.random() * 360}deg)`,
-				animationDelay: `${Math.random() * 5}s`,
-				animationDuration: `${Math.random() * 5 + 5}s`,
-			}
+			for (let i = 0; i < 50; i++) {
+				const style = {
+					top: `${(i * 37.17) % 100}%`,
+					left: `${(i * 61.83) % 100}%`,
+					backgroundColor: colors[i % colors.length],
+					transform: `rotate(${(i * 71) % 360}deg)`,
+					animationDelay: `${(i * 0.73) % 5}s`,
+					animationDuration: `${5 + ((i * 0.41) % 5)}s`,
+				}
 
 			sprinkles.push(<div key={i} className='sprinkle absolute animate-falling' style={style} />)
 		}

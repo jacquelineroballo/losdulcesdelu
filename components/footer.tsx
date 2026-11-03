@@ -54,13 +54,13 @@ export function Footer() {
 					<div
 						key={i}
 						className='bubble'
-						style={{
-							left: `${Math.random() * 100}%`,
-							width: `${Math.random() * 50 + 10}px`,
-							height: `${Math.random() * 50 + 10}px`,
-							animationDuration: `${Math.random() * 10 + 5}s`,
-							animationDelay: `${Math.random() * 5}s`,
-						}}
+							style={{
+								left: `${(i * 73.1) % 100}%`,
+								width: `${10 + ((i * 17.3) % 50)}px`,
+								height: `${10 + ((i * 23.7) % 50)}px`,
+								animationDuration: `${5 + ((i * 0.91) % 10)}s`,
+								animationDelay: `${(i * 0.37) % 5}s`,
+							}}
 					/>
 				))}
 			</div>
