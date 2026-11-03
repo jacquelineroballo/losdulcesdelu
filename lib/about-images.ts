@@ -8,6 +8,7 @@ export type TeamMember = {
 
 export type AboutImages = {
   hero: string
+  heroDecoration: string
   teamBackground: string
   workshop: string
   historyImages: string[]
@@ -18,6 +19,7 @@ const placeholder = (height: number, width: number) => `/placeholder.svg?height=
 
 export const defaultAboutImages: AboutImages = {
   hero: placeholder(600, 800),
+  heroDecoration: placeholder(100, 100),
   teamBackground: placeholder(1000, 2000),
   workshop: placeholder(600, 800),
   historyImages: [
@@ -36,6 +38,7 @@ export function normalizeAboutImages(value: Partial<AboutImages> | null | undefi
   return {
     ...defaultAboutImages,
     ...value,
+    heroDecoration: value?.heroDecoration || defaultAboutImages.heroDecoration,
     historyImages: value?.historyImages?.length ? value.historyImages : defaultAboutImages.historyImages,
     teamMembers: value?.teamMembers?.length ? value.teamMembers : defaultAboutImages.teamMembers,
   }

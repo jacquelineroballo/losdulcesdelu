@@ -85,7 +85,7 @@ src={aboutManagedImages.hero}
 								<div className='absolute inset-0 bg-gradient-to-t from-black/30 to-transparent'></div>
 
 								<motion.div
-									className='absolute bottom-6 right-6 glass p-4 rounded-lg max-w-[200px]'
+									className='absolute bottom-6 right-6 rounded-lg border border-white/70 bg-white/95 p-4 text-slate-900 shadow-xl max-w-[200px] dark:border-slate-700 dark:bg-slate-950/95 dark:text-white'
 									initial={{ opacity: 0, y: 20 }}
 									animate={{ opacity: 1, y: 0 }}
 									transition={{ duration: 0.5, delay: 0.8 }}
@@ -104,7 +104,7 @@ src={aboutManagedImages.hero}
 								transition={{ duration: 0.5, delay: 1 }}
 							>
 								<Image
-									src='/placeholder.svg?height=100&width=100'
+									src={aboutManagedImages.heroDecoration}
 									alt='Decoración'
 									width={100}
 									height={100}
