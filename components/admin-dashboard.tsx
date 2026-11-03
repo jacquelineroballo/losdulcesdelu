@@ -3,7 +3,6 @@
 import { useState } from "react"
 import {
   CakeSlice,
-  ChevronRight,
   ImageIcon,
   LayoutDashboard,
   Mail,
@@ -92,17 +91,15 @@ export function AdminDashboard() {
             </nav>
           </div>
 
-          <div className="border-t border-border p-4"><div className="rounded-xl bg-muted/70 p-4"><div className="flex items-center gap-2 text-sm font-medium"><Sparkles /> Próxima etapa</div><p className="mt-2 text-xs leading-relaxed text-muted-foreground">Vamos a sumar editores para cada página pública, uno por uno.</p></div></div>
         </aside>
 
         <main className="min-w-0 flex-1">
           <header className="flex min-h-20 items-center justify-between gap-4 border-b border-border bg-card px-4 sm:px-8">
-            <div className="flex items-center gap-3"><Button variant="ghost" size="icon" className="md:hidden" onClick={() => setSidebarOpen(true)} aria-label="Abrir menú"><Menu /></Button><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Panel de administración</p><h1 className="mt-1 font-display text-3xl leading-none sm:text-4xl">{activeItem.label}</h1></div></div>
-            <Badge variant="secondary" className="hidden gap-2 sm:flex"><span className="size-2 rounded-full bg-emerald-500" /> Guardado permanente activo</Badge>
+            <div className="flex items-center gap-3"><Button variant="ghost" size="icon" className="md:hidden" onClick={() => setSidebarOpen(true)} aria-label="Abrir menú"><Menu /></Button><div><p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Panel de administración</p><h1 className="mt-1 font-display text-2xl font-normal leading-none sm:text-3xl">{activeItem.label}</h1></div></div>
           </header>
 
           <div className="p-4 sm:p-8">
-            {activeSection === "overview" && <Overview onOpenGallery={() => setActiveSection("gallery")} onOpenHome={() => setActiveSection("home")} />}
+            {activeSection === "overview" && <Overview onNavigate={setActiveSection} />}
             {activeSection === "gallery" && <AdminGalleryPanel />}
             {activeSection === "home" && <AdminHomeImagesPanel />}
             {activeSection === "about" && <AdminAboutContentPanel />}
@@ -114,18 +111,21 @@ export function AdminDashboard() {
   )
 }
 
-function Overview({ onOpenGallery, onOpenHome }: { onOpenGallery: () => void; onOpenHome: () => void }) {
-  return <div className="flex flex-col gap-8">
-    <div className="max-w-3xl"><p className="text-sm font-medium text-primary">Bienvenida al centro de gestión</p><h2 className="mt-2 font-display text-4xl leading-tight sm:text-6xl">Todo tu contenido, en un solo lugar.</h2><p className="mt-4 max-w-2xl leading-relaxed text-muted-foreground">Gestioná productos e imágenes de tu pastelería desde un único lugar.</p></div>
-    <Card className="overflow-hidden"><CardHeader className="flex-row items-center justify-between gap-4"><div><CardTitle className="font-display text-3xl">Accesos rápidos</CardTitle><p className="mt-1 text-sm text-muted-foreground">Elegí qué querés actualizar.</p></div><Button onClick={onOpenGallery}>Abrir galería <ChevronRight data-icon="inline-end" /></Button></CardHeader><Separator /><CardContent className="grid gap-3 p-4 sm:grid-cols-2"><QuickAction icon={ImageIcon} title="Gestionar galería" copy="Agregá, editá o quitá productos e imágenes." onClick={onOpenGallery} /><QuickAction icon={CakeSlice} title="Gestionar imágenes de inicio" copy="Elegí, subí o reemplazá la imagen principal." onClick={onOpenHome} /></CardContent></Card>
-  </div>
-}
+function Overview({ onNavigate }: { onNavigate: (section: AdminSection) => void }) {
+  const pages = [
+    { id: "home" as const, label: "Inicio", icon: CakeSlice, description: "Imágenes principales" },
+    { id: "gallery" as const, label: "Galería", icon: ImageIcon, description: "Productos e imágenes" },
+    { id: "about" as const, label: "Sobre nosotros", icon: Users, description: "Equipo e historia" },
+    { id: "contact" as const, label: "Contacto", icon: Mail, description: "Datos y horarios" },
+  ]
 
-function QuickAction({ icon: Icon, title, copy, onClick, disabled = false }: { icon: typeof ImageIcon; title: string; copy: string; onClick?: () => void; disabled?: boolean }) {
-  return <button type="button" disabled={disabled} onClick={onClick} className={cn("flex items-start gap-4 rounded-xl border border-border p-4 text-left transition-colors", disabled ? "cursor-not-allowed opacity-50" : "hover:bg-muted")}><div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted"><Icon /></div><div><p className="font-medium">{title}</p><p className="mt-1 text-sm leading-relaxed text-muted-foreground">{copy}</p></div></button>
+  return <div className="flex flex-col gap-8">
+    <div className="max-w-3xl"><p className="text-sm text-primary">Centro de gestión</p><h2 className="mt-2 font-display text-3xl font-normal leading-tight sm:text-4xl">Gestioná tu pastelería.</h2></div>
+    <Card className="overflow-hidden"><CardHeader><CardTitle className="font-display text-2xl font-normal">Páginas</CardTitle></CardHeader><Separator /><CardContent className="grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-4">{pages.map(({ id, label, icon: Icon, description }) => <button key={id} type="button" onClick={() => onNavigate(id)} className="group flex min-h-32 flex-col justify-between rounded-xl border border-border p-4 text-left transition-colors hover:border-primary/40 hover:bg-primary/5"><span className="flex size-10 items-center justify-center rounded-xl bg-muted text-primary transition-colors group-hover:bg-primary/10"><Icon /></span><span><span className="block font-normal">{label}</span><span className="mt-1 block text-sm text-muted-foreground">{description}</span></span></button>)}</CardContent></Card>
+  </div>
 }
 
 function ComingSoon({ section }: { section: Exclude<AdminSection, "overview" | "gallery"> }) {
   const content = comingSoon[section]
-  return <Card className="mx-auto max-w-2xl"><CardContent className="flex flex-col items-center p-10 text-center sm:p-16"><div className="flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-primary"><Sparkles /></div><h2 className="mt-6 font-display text-4xl">{content.title}</h2><p className="mt-4 max-w-lg leading-relaxed text-muted-foreground">{content.copy}</p><Badge className="mt-6" variant="outline">Próximamente</Badge></CardContent></Card>
+  return <Card className="mx-auto max-w-2xl"><CardContent className="flex flex-col items-center p-10 text-center sm:p-16"><div className="flex size-16 items-center justify-center rounded-2xl bg-primary/10 text-primary"><Sparkles /></div><h2 className="mt-6 font-display text-3xl font-normal">{content.title}</h2><p className="mt-4 max-w-lg leading-relaxed text-muted-foreground">{content.copy}</p><Badge className="mt-6" variant="outline">Próximamente</Badge></CardContent></Card>
 }
