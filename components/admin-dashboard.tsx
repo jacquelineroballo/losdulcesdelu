@@ -16,6 +16,7 @@ import {
 import { AdminGalleryPanel } from "@/components/admin-gallery-panel"
 import { AdminHomeImagesPanel } from "@/components/admin-home-images-panel"
 import { AdminAboutContentPanel } from "@/components/admin-about-content-panel"
+import { AdminContactPanel } from "@/components/admin-contact-panel"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -37,7 +38,7 @@ const navigation: NavigationItem[] = [
   { id: "gallery", label: "Galería", description: "Productos e imágenes", icon: ImageIcon, available: true },
   { id: "home", label: "Página de inicio", description: "Imágenes destacadas", icon: CakeSlice, available: true },
   { id: "about", label: "Sobre nosotros", description: "Imágenes e historia", icon: Users, available: true },
-  { id: "contact", label: "Contacto", description: "Datos y horarios", icon: Mail, available: false },
+  { id: "contact", label: "Contacto", description: "Datos, horarios y redes", icon: Mail, available: true },
   { id: "settings", label: "Configuración", description: "Preferencias del panel", icon: Settings, available: false },
 ]
 
@@ -103,7 +104,8 @@ export function AdminDashboard() {
             {activeSection === "gallery" && <AdminGalleryPanel />}
             {activeSection === "home" && <AdminHomeImagesPanel />}
             {activeSection === "about" && <AdminAboutContentPanel />}
-            {activeSection !== "overview" && activeSection !== "gallery" && activeSection !== "home" && activeSection !== "about" && <ComingSoon section={activeSection} />}
+            {activeSection === "contact" && <AdminContactPanel />}
+            {activeSection !== "overview" && activeSection !== "gallery" && activeSection !== "home" && activeSection !== "about" && activeSection !== "contact" && <ComingSoon section={activeSection} />}
           </div>
         </main>
       </div>
@@ -116,7 +118,7 @@ function Overview({ onNavigate }: { onNavigate: (section: AdminSection) => void 
     { id: "home" as const, label: "Inicio", icon: CakeSlice, description: "Imágenes principales" },
     { id: "gallery" as const, label: "Galería", icon: ImageIcon, description: "Productos e imágenes" },
     { id: "about" as const, label: "Sobre nosotros", icon: Users, description: "Equipo e historia" },
-    { id: "contact" as const, label: "Contacto", icon: Mail, description: "Datos y horarios" },
+    { id: "contact" as const, label: "Contacto", icon: Mail, description: "Datos y redes" },
   ]
 
   return <div className="flex flex-col gap-8">
