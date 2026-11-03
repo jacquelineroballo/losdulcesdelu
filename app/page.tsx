@@ -796,8 +796,10 @@ title: 'Postres Especiales',
 				</div>
 			</section>
 
-			{/* Testimonios */}
-			<section className='py-20 bg-gradient-to-b from-pink-100 to-white relative'>
+				{false && (
+					<>
+						{/* Testimonios */}
+						<section className='py-20 bg-gradient-to-b from-pink-100 to-white relative'>
 				<div className='container px-4 md:px-6'>
 					<div className='grid gap-10 md:grid-cols-2 items-center'>
 						<FadeIn direction='left'>
@@ -886,9 +888,11 @@ title: 'Postres Especiales',
 						</FadeIn>
 					</div>
 				</div>
-			</section>
+						</section>
+					</>
+				)}
 
-			{/* Suscripción */}
+				{/* Suscripción */}
 			<section className='py-20 bg-gradient-to-b from-primary-50 to-background relative overflow-hidden'>
 				<div className='absolute inset-0 pointer-events-none'>{renderSprinkles()}</div>
 

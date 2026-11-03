@@ -18,6 +18,7 @@ import {
 
 import { AdminGalleryPanel } from "@/components/admin-gallery-panel"
 import { AdminHomeImagesPanel } from "@/components/admin-home-images-panel"
+import { AdminAboutImagesPanel } from "@/components/admin-about-images-panel"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -38,7 +39,7 @@ const navigation: NavigationItem[] = [
   { id: "overview", label: "Resumen", description: "Vista general del negocio", icon: LayoutDashboard, available: true },
   { id: "gallery", label: "Galería", description: "Productos e imágenes", icon: ImageIcon, available: true },
   { id: "home", label: "Página de inicio", description: "Imágenes destacadas", icon: CakeSlice, available: true },
-  { id: "about", label: "Sobre nosotros", description: "Historia y equipo", icon: Users, available: false },
+  { id: "about", label: "Sobre nosotros", description: "Imágenes e historia", icon: Users, available: true },
   { id: "contact", label: "Contacto", description: "Datos y horarios", icon: Mail, available: false },
   { id: "settings", label: "Configuración", description: "Preferencias del panel", icon: Settings, available: false },
 ]
@@ -106,7 +107,8 @@ export function AdminDashboard() {
             {activeSection === "overview" && <Overview onOpenGallery={() => setActiveSection("gallery")} onOpenHome={() => setActiveSection("home")} />}
             {activeSection === "gallery" && <AdminGalleryPanel />}
             {activeSection === "home" && <AdminHomeImagesPanel />}
-            {activeSection !== "overview" && activeSection !== "gallery" && activeSection !== "home" && <ComingSoon section={activeSection} />}
+            {activeSection === "about" && <AdminAboutImagesPanel />}
+            {activeSection !== "overview" && activeSection !== "gallery" && activeSection !== "home" && activeSection !== "about" && <ComingSoon section={activeSection} />}
           </div>
         </main>
       </div>
@@ -117,7 +119,7 @@ export function AdminDashboard() {
 function Overview({ onOpenGallery, onOpenHome }: { onOpenGallery: () => void; onOpenHome: () => void }) {
   return <div className="flex flex-col gap-8">
     <div className="max-w-2xl"><p className="text-sm text-muted-foreground">Bienvenida al centro de gestión de tu pastelería.</p><h2 className="mt-2 font-display text-4xl leading-tight sm:text-5xl">Todo tu contenido, en un solo lugar.</h2><p className="mt-4 leading-relaxed text-muted-foreground">Desde acá vas a poder mantener actualizados tus productos, imágenes y la información de cada página pública.</p></div>
-    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><MetricCard icon={ImageIcon} label="Galería" value="Activa" detail="Productos administrables" /><MetricCard icon={BarChart3} label="Páginas" value="2 / 4" detail="Módulos disponibles" /><MetricCard icon={ClipboardList} label="Contenido" value="En progreso" detail="Migración por etapas" /><MetricCard icon={Sparkles} label="Persistencia" value="Blob" detail="Guardado permanente" /></div>
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><MetricCard icon={ImageIcon} label="Galería" value="Activa" detail="Productos administrables" /><MetricCard icon={BarChart3} label="Páginas" value="3 / 4" detail="Módulos disponibles" /><MetricCard icon={ClipboardList} label="Contenido" value="En progreso" detail="Migración por etapas" /><MetricCard icon={Sparkles} label="Persistencia" value="Blob" detail="Guardado permanente" /></div>
     <Card className="overflow-hidden"><CardHeader className="flex-row items-center justify-between gap-4"><div><CardTitle>Accesos rápidos</CardTitle><p className="mt-1 text-sm text-muted-foreground">Empezá por el módulo que querés actualizar.</p></div><Button onClick={onOpenGallery}>Abrir galería <ChevronRight data-icon="inline-end" /></Button></CardHeader><Separator /><CardContent className="grid gap-3 p-4 sm:grid-cols-2"><QuickAction icon={ImageIcon} title="Gestionar galería" copy="Agregá, editá o quitá productos e imágenes." onClick={onOpenGallery} /><QuickAction icon={CakeSlice} title="Gestionar imágenes de inicio" copy="Elegí, subí o reemplazá la imagen principal." onClick={onOpenHome} /></CardContent></Card>
   </div>
 }
