@@ -4,6 +4,10 @@ import type React from "react"
 
 import { z } from "zod"
 import { useState, useEffect } from "react"
+import useSWR from "swr"
+import { defaultContactContent, type ContactContent } from "@/lib/contact-content"
+
+const contactContentFetcher = (url: string) => fetch(url, { cache: "no-store" }).then((response) => response.json() as Promise<ContactContent>)
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
@@ -27,6 +31,7 @@ const formSchema = z.object({
 })
 
 export default function ContactPage() {
+  const { data: contactContent = defaultContactContent } = useSWR<ContactContent>("/api/contact-content", contactContentFetcher, { fallbackData: defaultContactContent })
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 })
 
@@ -97,10 +102,10 @@ export default function ContactPage() {
               </motion.div>
             </motion.div>
 
-            <h1 className="text-4xl font-bold tracking-tighter sm:text-6xl gradient-text font-display">Contáctanos</h1>
+            <h1 className="text-4xl font-bold tracking-tighter sm:text-6xl gradient-text font-display">{contactContent.heroTitle}</h1>
 
             <p className="text-xl text-muted-foreground">
-              Estamos aquí para ayudarte a hacer realidad tus ideas más dulces
+              {contactContent.heroDescription}
             </p>
           </motion.div>
         </div>
@@ -130,25 +135,25 @@ export default function ContactPage() {
                         {
                           icon: <Mail className="h-6 w-6 text-primary" />,
                           title: "Email",
-                          content: "info@losdulcesdelu.com",
+                          content: contactContent.email,
                           action: "mailto:info@losdulcesdelu.com",
                         },
                         {
                           icon: <Phone className="h-6 w-6 text-primary" />,
                           title: "Teléfono",
-                          content: "(+54) 11 1234 5678",
+                          content: contactContent.phone,
                           action: "tel:+5411123456789",
                         },
                         {
                           icon: <MapPin className="h-6 w-6 text-primary" />,
                           title: "Dirección",
-                          content: "Av. Pastelería 123, Ciudad Dulce, Argentina",
+                          content: contactContent.address,
                           action: "https://maps.google.com",
                         },
                         {
                           icon: <Clock className="h-6 w-6 text-primary" />,
                           title: "Horario de Atención",
-                          content: "Lunes a Viernes: 9:00 - 18:00\nSábados: 10:00 - 15:00",
+                          content: contactContent.hours,
                         },
                       ].map((item, index) => (
                         <StaggerItem key={index} direction="left">
@@ -185,10 +190,10 @@ export default function ContactPage() {
                     <div className="pt-6 border-t">
                       <h3 className="font-bold text-lg mb-4">Síguenos</h3>
                       <div className="flex space-x-4">
-                        {["instagram", "facebook", "twitter"].map((social) => (
+                        {["instagram", "facebook", "twitter"].filter((social) => Boolean(contactContent[social as "instagram" | "facebook" | "twitter"])).map((social) => (
                           <motion.a
                             key={social}
-                            href={`https://${social}.com`}
+                            href={contactContent[social as "instagram" | "facebook" | "twitter"]}
                             className="h-10 w-10 bg-primary/10 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors duration-300"
                             whileHover={{ y: -5, scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
